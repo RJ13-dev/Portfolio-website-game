@@ -836,14 +836,13 @@
     .shop-item .emoji { width: 64px; height: 64px; font-size: 30px; }
     .shop-head h2 { font-size: 20px; }
 
-    /* The lobby art contains the sign ("get letters / earn coins / help me
-       shop") — important text baked into the image. On a tall phone, "cover"
-       crops it off, so show the whole image instead and fill the letterbox
-       with the warm wood tone. */
+    /* The lobby art (with the sign) crops badly on tall phones, so swap in the
+       cards-screen backdrop for mobile — it frames cleanly in portrait. */
     #lobby .room-bg.has-image {
-      background-size: contain;
-      background-position: center 40%;
-      background-color: #241708;
+      background-image: url("{% static 'assets/cards.png' %}") !important;
+      background-size: cover !important;
+      background-position: center !important;
+      background-color: transparent !important;
     }
   }
 

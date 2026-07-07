@@ -1348,35 +1348,55 @@
   @media(min-width:1080px){body.chatbot-open #contact .page{transform:translateX(-150px)}}
   @media(max-width:620px){.contact-methods{grid-template-columns:1fr}}
 
-  /* ---- Phones: fix nav overflow, hero spacing, tag alignment ---- */
-  @media(max-width:600px){
-    /* Let the pill nav wrap to two rows so EVERY item (incl. Contact) is
-       visible instead of the last one running off-screen. */
-    .top-nav{
-      flex-wrap:wrap; justify-content:center; overflow:visible;
-      top:12px; gap:3px 4px; padding:7px 10px;
-      max-width:calc(100vw - 16px); font-size:13px;
-    }
-    .top-nav a{padding:8px 12px}
-    .top-nav a.active:after{display:none}
-    /* Push page content down so the taller (wrapped) nav never overlaps it. */
-    .route{padding-top:clamp(132px,22vh,182px)}
+  /* ---- Hamburger menu button (hidden on desktop, shown on phones) ---- */
+  .nav-toggle{
+    display:none;
+    align-items:center; justify-content:center;
+    width:38px; height:38px; padding:0;
+    background:transparent; border:none; color:inherit; cursor:pointer;
+  }
+  .nav-toggle-bars, .nav-toggle-bars::before, .nav-toggle-bars::after{
+    content:""; display:block; width:20px; height:2.5px;
+    background:currentColor; border-radius:2px; transition:transform .25s ease, opacity .2s ease;
+  }
+  .nav-toggle-bars{position:relative}
+  .nav-toggle-bars::before{position:absolute; left:0; top:-6px}
+  .nav-toggle-bars::after{position:absolute; left:0; top:6px}
+  /* Turn the bars into an X when the menu is open */
+  .top-nav.open .nav-toggle-bars{background:transparent}
+  .top-nav.open .nav-toggle-bars::before{transform:translateY(6px) rotate(45deg)}
+  .top-nav.open .nav-toggle-bars::after{transform:translateY(-6px) rotate(-45deg)}
 
-    /* Space the stacked name / eyes / "developer" so the eyes don't touch
-       the name, and keep everything centred. */
-    .hero-title{gap:clamp(30px,8vw,50px)}
-    .eyes-inline{width:min(46vw,180px);margin:0 auto}
+  /* ---- Phones: collapse nav into a dropdown menu; fix hero spacing/tags ---- */
+  @media(max-width:600px){
+    /* Nav becomes just the hamburger; tapping it drops the links down as a
+       centred vertical list. No more items running off-screen. */
+    .top-nav{
+      flex-direction:column; align-items:center;
+      top:14px; gap:2px; padding:6px; width:auto;
+      max-width:calc(100vw - 20px); overflow:visible;
+    }
+    .nav-toggle{display:flex}
+    .top-nav a{display:none; width:100%; justify-content:center; text-align:center; padding:11px 26px}
+    .top-nav a.active:after{display:none}
+    .top-nav.open{border-radius:22px; padding:8px; gap:3px}
+    .top-nav.open a{display:flex}
+
+    /* Content starts below the (small, closed) nav. */
+    .route{padding-top:clamp(104px,16vh,150px)}
+
+    /* Extra breathing room so the eyes never touch the name. */
+    .hero-title{gap:clamp(52px,15vw,78px)}
+    .eyes-inline{width:min(44vw,170px);margin:6px auto}
     .hero-copy span{white-space:normal}
     .subtitle{padding:0 8px}
 
-    /* Work tags: one per line in a clean vertical column instead of a
-       staggered wrap. */
+    /* Work tags: one per line in a clean vertical column. */
     .work-hero-tags{flex-direction:column;align-items:flex-start;gap:10px}
   }
 
   @media(max-width:430px){
-    .top-nav{font-size:12px;gap:2px 3px;padding:6px 8px}
-    .top-nav a{padding:7px 10px}
+    .top-nav a{padding:10px 22px}
     .hero-title{font-size:clamp(2.5rem,13vw,3.4rem)}
     .about-intro-card{padding:20px}
     .resume-chatbot{top:72px;height:calc(100dvh - 92px)}
@@ -1391,6 +1411,9 @@
 </head>
 <body>
 <nav aria-label="Primary" class="top-nav">
+    <button class="nav-toggle" type="button" aria-label="Toggle menu" aria-expanded="false">
+      <span class="nav-toggle-bars" aria-hidden="true"></span>
+    </button>
     <a data-route="about" href="#about">About</a>
     <a data-route="work" href="#work">Work</a>
     <a data-route="projects" href="#projects">Projects</a>
@@ -1860,6 +1883,29 @@
   const nav=document.querySelector(".top-nav");
   const links=[...document.querySelectorAll("[data-route]")];
   const views=[...document.querySelectorAll("[data-view]")];
+
+  // Mobile hamburger: tap to open the nav as a dropdown, tap a link to close it.
+  const navToggle=nav && nav.querySelector(".nav-toggle");
+  if(navToggle){
+    navToggle.addEventListener("click",function(e){
+      e.stopPropagation();
+      const open=nav.classList.toggle("open");
+      navToggle.setAttribute("aria-expanded",open?"true":"false");
+    });
+    nav.querySelectorAll("a").forEach(function(a){
+      a.addEventListener("click",function(){
+        nav.classList.remove("open");
+        navToggle.setAttribute("aria-expanded","false");
+      });
+    });
+    // Close the menu when tapping anywhere outside the nav.
+    document.addEventListener("click",function(e){
+      if(nav.classList.contains("open") && !nav.contains(e.target)){
+        nav.classList.remove("open");
+        navToggle.setAttribute("aria-expanded","false");
+      }
+    });
+  }
 
   const CASES={
     pencs:{
