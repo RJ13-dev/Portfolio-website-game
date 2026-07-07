@@ -1,0 +1,73 @@
+# CI only. Deployment is handled by Railway's native GitHub integration
+# (it auto-builds + deploys from the Dockerfile on every push to main).
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    name: Lint & test
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_DB: portfolio_test
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+      redis:
+        image: redis:7
+        ports: ["6379:6379"]
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Lint with flake8
+        run: flake8 . --max-line-length=120 --exclude=migrations,.venv
+
+      - name: Run tests
+        env:
+          SECRET_KEY: test-secret-key
+          DEBUG: "True"
+          DATABASE_URL: postgres://postgres:postgres@localhost:5432/portfolio_test
+          REDIS_URL: redis://localhost:6379/0
+        run: pytest --cov=. --cov-report=term-missing
+
+  build:
+    name: Build Docker image (sanity check)
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build image
+        run: docker build -t rijul-portfolio:${{ github.sha }} .
+
+  # Deployment is done by Railway's GitHub integration, not here. Connect the
+  # repo in the Railway dashboard and it redeploys automatically on each push.

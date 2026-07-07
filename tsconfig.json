@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "target": "ES2017",
+    "module": "none",
+    "lib": ["ES2017", "DOM", "DOM.Iterable"],
+    "rootDir": "static/ts",
+    "outDir": "static/js",
+    "strict": false,
+    "noImplicitAny": false,
+    "noImplicitThis": false,
+    "removeComments": false,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
+  },
+  "include": ["static/ts/**/*.ts", "static/ts/**/*.d.ts"]
+}

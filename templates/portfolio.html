@@ -1,0 +1,2308 @@
+{% load static %}<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta name="csrf-token" content="{{ csrf_token }}"/>
+<title>Rijul Sobti - Curious Developer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+  :root{
+    --mint:#8fdac0;
+    --mint-bright:#a8ead5;
+    --text:#d7eee5;
+    --text-soft:rgba(215,238,229,.78);
+    --deep:#0e221f;
+    --green:#1d4f22;
+    --olive:#3a4327;
+    --glass:rgba(255,255,255,.12);
+    --glass-strong:rgba(255,255,255,.2);
+    --glass-border:rgba(255,255,255,.2);
+    --white:#fff;
+    --purple:#d9a1f1;
+    --cyan:#9ce5df;
+    --peach:#efb292;
+    --blue:#b7dcfb;
+    --cream:#f2f0e6;
+    --ink:#1b3d38;
+    --font-title:"Fredoka","Arial Rounded MT Bold",system-ui,-apple-system,sans-serif;
+    --font-body:"Nunito",system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  }
+
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;
+    min-height:100vh;
+    color:var(--text);
+    font-family:var(--font-body);
+    font-optical-sizing:auto;
+    overflow-x:hidden;
+    background:
+      radial-gradient(circle at 14% 0%,rgba(90,98,60,.45),transparent 34%),
+      radial-gradient(circle at 79% 10%,rgba(40,100,38,.5),transparent 38%),
+      linear-gradient(145deg,var(--olive) 0%,var(--green) 42%,var(--deep) 100%);
+    background-attachment:fixed;
+    -webkit-font-smoothing:antialiased;
+    text-rendering:geometricPrecision;
+  }
+  body:before{
+    content:"";
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    background:
+      linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px),
+      linear-gradient(0deg,rgba(255,255,255,.02) 1px,transparent 1px);
+    background-size:80px 80px;
+    opacity:.34;
+    z-index:-1;
+  }
+  a{color:inherit;text-decoration:none}
+  ::selection{background:var(--mint);color:var(--deep)}
+
+  /* Fixed solid forest ribbon */
+  .top-nav{
+    position:fixed;
+    top:30px;
+    left:50%;
+    transform:translateX(-50%);
+    z-index:100;
+    display:flex;
+    align-items:center;
+    gap:6px;
+    padding:9px 12px;
+    border-radius:999px;
+    font-weight:750;
+    font-size:clamp(15px,1.15vw,18px);
+    letter-spacing:.01em;
+    color:rgba(216,240,231,.92);
+    background:
+      linear-gradient(180deg,rgba(58,86,70,.92),rgba(38,62,52,.95));
+    border:1px solid rgba(154,196,176,.16);
+    box-shadow:
+      0 18px 48px rgba(7,30,24,.42),
+      0 2px 8px rgba(7,30,24,.28),
+      inset 0 1px 0 rgba(196,224,210,.14),
+      inset 0 -1px 0 rgba(0,0,0,.22);
+    backdrop-filter:blur(10px) saturate(120%);
+    -webkit-backdrop-filter:blur(10px) saturate(120%);
+    transition:box-shadow .3s ease,background .3s ease;
+  }
+  .top-nav.scrolled{
+    background:
+      linear-gradient(180deg,rgba(50,78,64,.96),rgba(31,53,45,.98));
+    box-shadow:
+      0 20px 56px rgba(7,30,24,.5),
+      0 2px 8px rgba(7,30,24,.3),
+      inset 0 1px 0 rgba(196,224,210,.16),
+      inset 0 -1px 0 rgba(0,0,0,.26);
+  }
+  .top-nav a{
+    position:relative;
+    display:inline-flex;
+    align-items:center;
+    border-radius:999px;
+    padding:11px 18px;
+    line-height:1;
+    transition:color .2s ease,background .2s ease;
+    white-space:nowrap;
+  }
+  .top-nav a:hover{
+    color:var(--white);
+    background:rgba(196,224,210,.09);
+  }
+  .top-nav a.active{
+    background:
+      linear-gradient(180deg,rgba(92,128,106,.55),rgba(70,104,84,.5));
+    box-shadow:
+      inset 0 1px 0 rgba(207,232,219,.22),
+      inset 0 -1px 2px rgba(0,0,0,.3),
+      0 1px 3px rgba(0,0,0,.25);
+    color:#eafaf3;
+    font-weight:800;
+  }
+  .top-nav a.active:after{
+    content:"/";
+    display:inline-grid;
+    place-items:center;
+    width:26px;
+    height:26px;
+    margin-left:11px;
+    border-radius:9px;
+    color:var(--mint-bright);
+    background:rgba(20,40,33,.45);
+    border:1.5px solid rgba(168,234,213,.4);
+    box-shadow:inset 0 0 8px rgba(168,234,213,.12);
+    font-size:.86em;
+    font-weight:700;
+  }
+
+  main{min-height:100vh}
+  .route{
+    display:none;
+    min-height:100vh;
+    padding:clamp(122px,14vh,168px) 24px 92px;
+    animation:rise .42s ease both;
+  }
+  .route.active{display:block}
+  @keyframes rise{
+    from{opacity:0;transform:translateY(14px)}
+    to{opacity:1;transform:none}
+  }
+
+  /* Hero */
+  .hero{
+    min-height:calc(100vh - 156px);
+    display:grid;
+    place-items:center;
+    text-align:center;
+    position:relative;
+  }
+  .hero-core{
+    width:min(96vw,1700px);
+    margin:0 auto;
+    position:relative;
+  }
+  .hero-title{
+    margin:0 auto;
+    display:grid;
+    grid-template-columns:max-content auto max-content;
+    justify-content:center;
+    align-items:center;
+    gap:clamp(24px,3vw,56px);
+    color:var(--mint);
+    font-family:var(--font-title);
+    font-weight:700;
+    font-size:clamp(3.4rem,5vw,6.6rem);
+    line-height:1;
+    letter-spacing:-.02em;
+  }
+  .hero-copy{
+    display:grid;
+    gap:.05em;
+    align-self:center;
+  }
+  .hero-copy span{
+    display:block;
+    white-space:nowrap;
+  }
+  .hero-copy.left-copy{text-align:right;justify-self:end}
+  .hero-copy.right-copy{text-align:left;justify-self:start}
+  .eyes-inline{
+    width:clamp(245px,19.5vw,355px);
+    flex:0 0 auto;
+    display:grid;
+    place-items:center;
+    transform:translateY(.02em);
+    justify-self:center;
+  }
+  #eyesSvg{
+    width:100%;
+    overflow:visible;
+    display:block;
+    filter:drop-shadow(0 24px 24px rgba(0,0,0,.22));
+  }
+  .spark{
+    position:absolute;
+    width:clamp(50px,5.8vw,88px);
+    color:var(--white);
+    filter:drop-shadow(0 12px 24px rgba(0,0,0,.12));
+  }
+  .spark.one{left:3%;top:63%}
+  .spark.two{right:4%;top:18%}
+  .spark svg{display:block;width:100%;height:100%}
+  .subtitle{
+    max-width:760px;
+    margin:clamp(42px,6vh,66px) auto 0;
+    color:var(--text);
+    font-size:clamp(1rem,1.25vw,1.3rem);
+    line-height:1.7;
+    font-weight:780;
+    letter-spacing:-.025em;
+  }
+
+  .about-intro-section{
+    width:min(100%,1320px);
+    margin:clamp(48px,6vw,82px) auto 0;
+    position:relative;
+  }
+  .about-intro-card{
+    position:relative;
+    overflow:hidden;
+    display:grid;
+    grid-template-columns:minmax(0,1.25fr) minmax(320px,.75fr);
+    gap:clamp(28px,4vw,64px);
+    align-items:stretch;
+    padding:clamp(30px,4.5vw,58px);
+    border-radius:46px;
+    background:
+      radial-gradient(circle at 12% 18%,rgba(168,234,213,.22),transparent 34%),
+      linear-gradient(145deg,rgba(255,255,255,.16),rgba(255,255,255,.07));
+    border:1px solid rgba(168,234,213,.2);
+    box-shadow:
+      0 36px 90px rgba(5,29,24,.28),
+      inset 0 1px 0 rgba(255,255,255,.18);
+    backdrop-filter:blur(14px) saturate(125%);
+    -webkit-backdrop-filter:blur(14px) saturate(125%);
+  }
+  .about-intro-card:before{
+    content:"";
+    position:absolute;
+    right:-90px;
+    top:-120px;
+    width:340px;
+    height:340px;
+    border-radius:50%;
+    background:rgba(143,218,192,.16);
+    filter:blur(1px);
+  }
+  .about-intro-copy{position:relative;z-index:1;text-align:left}
+  .about-eyebrow{
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    margin:0 0 18px;
+    color:var(--mint-bright);
+    font-size:16px;
+    font-weight:950;
+    text-transform:uppercase;
+    letter-spacing:.26em;
+  }
+  .about-eyebrow:before{
+    content:"";
+    width:46px;
+    height:3px;
+    border-radius:999px;
+    background:var(--mint-bright);
+    box-shadow:0 0 18px rgba(168,234,213,.5);
+  }
+  .about-intro-copy h2{
+    margin:0;
+    color:#f4fff9;
+    font-family:var(--font-title);
+    font-size:clamp(2.5rem,5.5vw,6.4rem);
+    line-height:.92;
+    letter-spacing:-.02em;
+  }
+  .about-intro-copy p.about-text{
+    max-width:760px;
+    margin:24px 0 0;
+    color:rgba(215,238,229,.86);
+    font-size:clamp(1.05rem,1.35vw,1.28rem);
+    line-height:1.72;
+    font-weight:680;
+  }
+  .about-intro-tags{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    margin-top:28px;
+  }
+  .about-intro-tags span{
+    border-radius:999px;
+    padding:11px 14px;
+    color:#eafff7;
+    background:rgba(255,255,255,.1);
+    border:1px solid rgba(168,234,213,.18);
+    font-size:13px;
+    font-weight:900;
+  }
+  .about-snapshot{
+    position:relative;
+    z-index:1;
+    display:grid;
+    grid-template-columns:1fr;
+    gap:14px;
+  }
+  .snapshot-label{
+    margin:0 0 2px;
+    color:var(--mint-bright);
+    font-size:13px;font-weight:950;text-transform:uppercase;letter-spacing:.2em;
+  }
+  .snapshot-tile{
+    position:relative;
+    overflow:hidden;
+    border-radius:28px;
+    padding:24px;
+    background:rgba(255,255,255,.13);
+    border:1px solid rgba(255,255,255,.15);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.14);
+  }
+  .snapshot-tile b{
+    display:block;
+    color:var(--mint-bright);
+    font-family:var(--font-title);
+    font-size:clamp(1.7rem,2.5vw,2.6rem);
+    line-height:1;
+    letter-spacing:-.02em;
+  }
+  .snapshot-tile span{
+    display:block;
+    margin-top:9px;
+    color:rgba(215,238,229,.78);
+    font-weight:800;
+    line-height:1.4;
+  }
+
+  /* Work widgets/cards visible when scrolling down */
+  .work-section{
+    position:relative;
+    width:calc(100% + 48px);
+    margin:54px -24px -92px;
+    padding:clamp(42px,5vw,68px) 24px 90px;
+    color:var(--text);
+    background:
+      radial-gradient(circle at 10% 6%,rgba(168,234,213,.12),transparent 34%),
+      radial-gradient(circle at 88% 0%,rgba(255,255,255,.06),transparent 28%);
+    border-top:1px solid rgba(168,234,213,.12);
+  }
+  .work-section:before{
+    content:"";
+    position:absolute;
+    inset:0 0 auto;
+    height:1px;
+    background:linear-gradient(90deg,transparent,rgba(168,234,213,.28),transparent);
+  }
+  .work-wrap{
+    width:min(100%,1320px);
+    margin:0 auto;
+  }
+  .work-heading{
+    display:flex;
+    align-items:end;
+    justify-content:space-between;
+    gap:24px;
+    margin-bottom:30px;
+    text-align:left;
+  }
+  .work-heading h2{
+    margin:0;
+    color:var(--mint);
+    font-family:var(--font-title);
+    font-size:clamp(2.6rem,5vw,5.8rem);
+    line-height:.94;
+    letter-spacing:-.02em;
+  }
+  .work-heading p{
+    width:min(520px,100%);
+    margin:0;
+    color:var(--text-soft);
+    font-weight:760;
+    line-height:1.55;
+  }
+  .about-skills-section .work-heading{justify-content:center;text-align:center}
+  .work-widgets{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:clamp(22px,3vw,44px);
+  }
+  .work-card{
+    min-height:540px;
+    border-radius:34px;
+    padding:42px 42px 0;
+    position:relative;
+    overflow:hidden;
+    display:flex;
+    flex-direction:column;
+    text-decoration:none;
+    cursor:pointer;
+    box-shadow:0 36px 80px -34px rgba(21,60,53,.5);
+    transition:transform .4s cubic-bezier(.2,.7,.2,1),box-shadow .4s ease;
+  }
+  .work-card:hover{
+    transform:translateY(-8px);
+    box-shadow:0 48px 96px -34px rgba(21,60,53,.58);
+  }
+  .work-card:focus-visible{
+    outline:3px solid #24443d;
+    outline-offset:4px;
+  }
+  .work-card.purple{background:linear-gradient(160deg,#e4b7f8,#d5a2ee)}
+  .work-card.cyan{background:linear-gradient(160deg,#a9ebe3,#92dcd4)}
+  .work-card.peach{background:linear-gradient(160deg,#f3c0a7,#eba886)}
+  .work-card.blue{background:linear-gradient(160deg,#c5e4ff,#a9d4f4)}
+  .work-card.gold{background:linear-gradient(160deg,#f3e2b0,#e7cf86)}
+  .card-head{
+    position:relative;
+    z-index:2;
+    text-align:right;
+    margin-bottom:28px;
+  }
+  .card-kicker{
+    margin:0 0 10px;
+    color:#31504b;
+    font-size:12px;
+    font-weight:950;
+    text-transform:uppercase;
+    letter-spacing:.22em;
+  }
+  .work-card h3{
+    margin:0;
+    color:#24443d;
+    font-family:var(--font-title);
+    font-size:clamp(2.1rem,3.1vw,3.4rem);
+    line-height:.95;
+    letter-spacing:-.02em;
+  }
+  .work-card p{
+    max-width:430px;
+    margin:14px 0 0;
+    margin-left:auto;
+    color:#385d56;
+    font-weight:760;
+    line-height:1.5;
+    font-size:.96rem;
+  }
+  .card-badge{display:none}
+  .mock-window{
+    position:relative;
+    z-index:1;
+    margin-top:auto;
+    border-radius:14px 14px 0 0;
+    background:#fff;
+    overflow:hidden;
+    box-shadow:0 -6px 40px rgba(37,75,68,.16);
+  }
+  .mock-bar{
+    height:48px;
+    display:flex;
+    align-items:center;
+    gap:18px;
+    padding:0 22px;
+    background:#0768ad;
+  }
+  .mock-bar.purple-bar{background:#7241a8}
+  .mock-bar.dark-bar{background:#1c2624}
+  .logo-mark{
+    width:18px;
+    height:22px;
+    border-radius:9px;
+    background:linear-gradient(135deg,#fff 0 40%,rgba(255,255,255,.55) 40% 100%);
+    transform:skew(-12deg);
+  }
+  .bar-pill{
+    height:10px;
+    border-radius:999px;
+    background:rgba(255,255,255,.36);
+  }
+  .bar-pill.long{width:92px}.bar-pill.mid{width:70px}.bar-pill.short{width:48px}
+  .mock-body{padding:28px 30px 32px;color:#233d38;background:#fff}
+  .mini-label{
+    display:inline-flex;
+    align-items:center;
+    width:max-content;
+    border-radius:999px;
+    padding:6px 10px;
+    font-size:12px;
+    font-weight:850;
+    color:#24724f;
+    background:#e7f8ee;
+    border:1px solid #8fe2b0;
+  }
+  .mock-title{
+    margin:18px 0 16px;
+    font-size:clamp(1.35rem,2vw,2rem);
+    line-height:1.15;
+    font-weight:900;
+    color:#233d38;
+  }
+  .line{height:10px;border-radius:99px;background:#e9eeee;margin:13px 0}
+  .line.w90{width:90%}.line.w80{width:80%}.line.w68{width:68%}.line.w44{width:44%}
+  .button-row{display:flex;gap:10px;margin-top:22px}
+  .mock-btn{height:36px;border-radius:8px;background:#8b51c4;width:88px}.mock-btn.light{background:#efe3fa;border:2px solid #d7b4f1}
+
+  .mock-code{
+    margin-top:auto;
+    border-radius:16px 16px 0 0;
+    overflow:hidden;
+    background:#17201e;
+    color:#c9f3e8;
+    box-shadow:0 -6px 40px rgba(37,75,68,.16);
+  }
+  .code-top{height:48px;display:flex;align-items:center;gap:10px;padding:0 18px;background:#111916}
+  .dot{width:12px;height:12px;border-radius:50%;background:#ff6b5f}.dot:nth-child(2){background:#ffbd4a}.dot:nth-child(3){background:#30c75a}
+  .code-body{padding:24px;font-family:"SFMono-Regular",Consolas,monospace;font-size:14px;line-height:1.8}
+  .code-body span{display:block}.code-green{color:#86e6b6}.code-blue{color:#8dd8ff}.code-muted{color:#7c928c}
+
+  .status-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:auto;padding-bottom:42px;position:relative;z-index:1}
+  .status-tile{border-radius:22px;background:rgba(255,255,255,.72);padding:20px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.78)}
+  .status-tile b{display:block;color:#24443d;font-size:1.7rem;font-family:var(--font-title);letter-spacing:-.02em}
+  .status-tile span{display:block;margin-top:8px;color:#58746d;font-weight:800}
+  .status-dot{width:12px;height:12px;border-radius:50%;background:#32c878;box-shadow:0 0 0 6px rgba(50,200,120,.16);margin-bottom:16px}
+
+  .case-wrap{width:min(100%,820px);margin:0 auto}
+  .case-back{
+    display:inline-block;
+    margin-bottom:38px;
+    color:var(--mint-bright);
+    font-weight:800;
+    font-size:.98rem;
+    transition:transform .2s ease,color .2s ease;
+  }
+  .case-back:hover{color:var(--white);transform:translateX(-4px)}
+  .case-kicker{
+    margin:0 0 12px;
+    color:var(--mint);
+    font-size:13px;
+    font-weight:950;
+    text-transform:uppercase;
+    letter-spacing:.22em;
+  }
+  .case-title{
+    margin:0 0 56px;
+    font-family:var(--font-title);
+    font-size:clamp(2.8rem,6vw,5rem);
+    line-height:.92;
+    letter-spacing:-.02em;
+    color:var(--white);
+  }
+  .case-h2{
+    margin:0 0 22px;
+    font-family:var(--font-title);
+    font-size:clamp(1.8rem,3vw,2.6rem);
+    letter-spacing:-.02em;
+    color:var(--mint-bright);
+  }
+  .case-body p{
+    margin:0 0 22px;
+    font-size:clamp(1.05rem,1.5vw,1.3rem);
+    line-height:1.65;
+    color:var(--text-soft);
+    font-weight:600;
+  }
+
+  .phone-mock{
+    position:relative;
+    z-index:1;
+    margin:34px auto 0;
+    width:min(74%,320px);
+    min-height:300px;
+    border:12px solid #202827;
+    border-bottom-width:0;
+    border-radius:40px 40px 0 0;
+    background:#fff;
+    overflow:hidden;
+    box-shadow:0 26px 48px rgba(37,75,68,.25);
+  }
+  .phone-notch{width:92px;height:25px;border-radius:0 0 15px 15px;background:#202827;margin:0 auto 18px}
+  .phone-body{padding:0 22px 24px;color:#233d38}
+  .phone-body h4{font-size:1.6rem;margin:0 0 18px;font-family:var(--font-title);letter-spacing:-.02em}
+  .tabs{display:flex;gap:8px;margin-bottom:18px}.tabs span{padding:9px 12px;border-radius:10px;background:#edf2f2;font-size:12px;font-weight:850}.tabs span:first-child{background:#0870b8;color:#fff}
+  .message{display:grid;grid-template-columns:40px 1fr;gap:12px;align-items:center;padding:14px;border-radius:16px;background:#f5f8f8}.avatar{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#89dac1,#315f57)}.message b{display:block;font-size:13px}.message small{color:#6c817c;font-weight:750}
+
+  /* Existing content pages */
+  .page{
+    width:min(100%,1180px);
+    margin:0 auto;
+    text-align:center;
+  }
+  .page h1{
+    margin:0;
+    color:var(--mint);
+    font-family:var(--font-title);
+    font-weight:1000;
+    font-size:clamp(4.2rem,9vw,10rem);
+    line-height:1.02;
+    letter-spacing:-.02em;
+  }
+  .page p.lead{
+    width:min(760px,100%);
+    margin:34px auto 0;
+    color:var(--text);
+    font-size:clamp(1.08rem,1.55vw,1.45rem);
+    line-height:1.65;
+    font-weight:750;
+    letter-spacing:-.025em;
+  }
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(12,1fr);
+    gap:24px;
+    margin-top:clamp(48px,7vw,92px);
+    text-align:left;
+  }
+  .panel{
+    grid-column:span 6;
+    min-height:300px;
+    border-radius:42px;
+    padding:34px;
+    color:#1f4c45;
+    background:var(--mint);
+    overflow:hidden;
+    position:relative;
+    box-shadow:0 50px 100px -24px rgba(0,0,0,.25);
+  }
+  .panel.large{grid-column:span 7;min-height:430px}
+  .panel.small{grid-column:span 5;min-height:430px}
+  .panel.white{background:rgba(255,255,255,.9)}
+  .panel.peach{background:var(--peach)}
+  .panel.purple{background:var(--purple)}
+  .panel.cyan{background:var(--cyan)}
+  .panel:after{
+    content:"";
+    position:absolute;
+    right:-46px;
+    bottom:-48px;
+    width:200px;
+    height:200px;
+    border-radius:50%;
+    background:rgba(255,255,255,.22);
+  }
+  .kicker{
+    margin:0;
+    color:#315f57;
+    text-transform:uppercase;
+    letter-spacing:.18em;
+    font-size:13px;
+    font-weight:950;
+  }
+  .panel h2{
+    margin:12px 0 0;
+    color:#24544c;
+    font-family:var(--font-title);
+    font-size:clamp(2.1rem,4.1vw,4.8rem);
+    line-height:1;
+    letter-spacing:-.02em;
+  }
+  .panel p{
+    position:relative;
+    z-index:1;
+    max-width:58ch;
+    color:#486760;
+    font-size:1.04rem;
+    line-height:1.62;
+    font-weight:760;
+  }
+  .chips{
+    position:relative;
+    z-index:1;
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    margin-top:24px;
+  }
+  .chips span{
+    border-radius:999px;
+    background:rgba(255,255,255,.52);
+    padding:10px 14px;
+    color:#24544c;
+    font-size:13px;
+    font-weight:900;
+  }
+
+  .play-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:22px;
+    margin-top:64px;
+  }
+  .toy{
+    min-height:260px;
+    border:0;
+    border-radius:42px;
+    padding:28px;
+    background:rgba(255,255,255,.1);
+    color:var(--text);
+    text-align:left;
+    cursor:pointer;
+    box-shadow:inset 0 0 0 1px rgba(255,255,255,.08);
+    transition:transform .25s,background .25s;
+  }
+  .toy:hover{transform:translateY(-5px);background:rgba(255,255,255,.15)}
+  .toy b{
+    display:block;
+    color:var(--mint);
+    font-family:var(--font-title);
+    font-size:2.4rem;
+    line-height:1;
+    letter-spacing:-.02em;
+  }
+  .toy span{
+    display:block;
+    margin-top:18px;
+    color:var(--text-soft);
+    line-height:1.6;
+    font-weight:750;
+  }
+  /* Play route is its own cozy, lamplit room — fully warm so the wooden
+     cabinet feels at home instead of clashing with the site's green. */
+  #play{
+    background:
+      radial-gradient(95% 60% at 50% -8%,rgba(255,198,110,.16),transparent 60%),
+      radial-gradient(80% 50% at 50% 120%,rgba(196,136,78,.12),transparent 60%),
+      linear-gradient(180deg,#2a1c0f 0%,#1d1208 56%,#140c05 100%);
+  }
+  #play .page h1{color:#F0D590;text-shadow:0 3px 0 #6e4626,0 0 36px rgba(255,198,110,.28)}
+  #play .lead{color:#E7CFA3}
+
+  /* ===== Stimulus game showcase — warm wooden cabinet ===== */
+  .game-feature{
+    position:relative;
+    margin-top:48px;
+    border-radius:38px;
+    overflow:hidden;
+    background:
+      radial-gradient(120% 80% at 50% 0%,rgba(255,198,110,.20),transparent 55%),
+      linear-gradient(160deg,#3a2817 0%,#2a1d10 48%,#1c1208 100%);
+    border:1px solid rgba(214,168,112,.45);
+    box-shadow:0 40px 90px rgba(8,4,0,.5),inset 0 1px 0 rgba(214,168,112,.25);
+    padding:clamp(30px,4.5vw,58px);
+  }
+  .game-feature:before{
+    content:"";position:absolute;top:-170px;left:50%;width:640px;height:500px;margin-left:-320px;
+    background:radial-gradient(circle at 50% 40%,rgba(255,198,110,.20),transparent 62%);
+    pointer-events:none;animation:flicker 5s ease-in-out infinite;
+  }
+  @keyframes flicker{0%,100%{opacity:.85}50%{opacity:1}}
+  .game-feature .gf-eyebrow{
+    position:relative;display:inline-flex;align-items:center;gap:10px;margin:0 0 14px;
+    color:#C4884E;font-size:13px;font-weight:950;text-transform:uppercase;letter-spacing:.22em;
+  }
+  .game-feature .gf-eyebrow:before{content:"";width:36px;height:2px;border-radius:999px;background:#C4884E;box-shadow:0 0 16px rgba(196,136,78,.6)}
+  .game-feature h2{
+    position:relative;font-family:var(--font-title);color:#F0D590;
+    font-size:clamp(2.2rem,3.6vw,3.4rem);line-height:1.02;letter-spacing:-.02em;margin:0 0 22px;
+    text-shadow:0 2px 0 #6e4626;
+  }
+  /* philosophy / theme intro, now at the top */
+  .gf-theme{
+    position:relative;margin:0 0 30px;padding:22px 26px;border-radius:20px;
+    border-left:3px solid #C4884E;background:rgba(20,12,4,.45);
+    color:#E7CFA3;font-style:italic;line-height:1.7;font-weight:600;font-size:clamp(1rem,1.15vw,1.15rem);
+  }
+  .gf-theme b{color:#F0D590;font-style:normal}
+  .gf-tech-label{position:relative;margin:32px 0 14px;color:#C4884E;font-size:12px;font-weight:950;text-transform:uppercase;letter-spacing:.2em}
+  .gf-tech{display:flex;flex-wrap:wrap;gap:10px}
+  .gf-chip{
+    display:inline-flex;align-items:center;gap:8px;
+    padding:9px 16px;border-radius:999px;font-weight:800;font-size:.92rem;
+    background:rgba(20,12,4,.5);border:1px solid rgba(214,168,112,.35);color:#E7CFA3;
+  }
+  .gf-chip small{color:#F0D590;font-weight:900}
+  .contact-link{
+    display:inline-flex;
+    flex-direction:column;
+    align-items:center;
+    margin-top:44px;
+    padding:34px 58px;
+    border-radius:999px;
+    color:var(--mint);
+    font-family:var(--font-title);
+    font-size:clamp(4.4rem,9vw,10rem);
+    line-height:1;
+    letter-spacing:-.02em;
+    transition:box-shadow .25s,transform .25s;
+  }
+  .contact-link:hover{
+    transform:translateY(-4px);
+    box-shadow:0 0 0 3px rgba(255,255,255,.55);
+  }
+
+
+  .job-meta{
+    display:flex;
+    justify-content:flex-end;
+    flex-wrap:wrap;
+    gap:8px;
+    margin-top:14px;
+    position:relative;
+    z-index:2;
+  }
+  .job-meta span{
+    border-radius:999px;
+    padding:8px 11px;
+    color:#24443d;
+    background:rgba(255,255,255,.45);
+    font-size:12px;
+    font-weight:900;
+  }
+  .mini-list{
+    margin:16px 0 0 auto;
+    padding:0;
+    list-style:none;
+    max-width:430px;
+    color:#385d56;
+    font-weight:800;
+    line-height:1.5;
+    font-size:.9rem;
+  }
+  .mini-list li{margin:7px 0}
+  .mini-list li:before{content:"• ";font-weight:1000;color:#24443d}
+  .case-list{
+    margin:4px 0 34px;
+    padding-left:22px;
+    color:var(--text-soft);
+    font-size:clamp(1rem,1.35vw,1.18rem);
+    line-height:1.65;
+    font-weight:650;
+  }
+  .case-list li{margin:0 0 14px}
+  .case-tags{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    margin:8px 0 34px;
+  }
+  .case-tags span{
+    border-radius:999px;
+    padding:10px 14px;
+    background:rgba(255,255,255,.1);
+    color:var(--mint-bright);
+    border:1px solid rgba(168,234,213,.18);
+    font-weight:850;
+    font-size:13px;
+  }
+  .skill-card h2{font-size:clamp(1.9rem,3.2vw,3.7rem)}
+  .learning-note{
+    margin-top:18px;
+    padding:18px;
+    border-radius:22px;
+    background:rgba(255,255,255,.42);
+    color:#315f57;
+    font-weight:850;
+    line-height:1.55;
+    position:relative;
+    z-index:2;
+  }
+
+
+
+  .about-skills-section .skills-grid{margin-top:32px}
+
+  .work-page-header{
+    width:min(100%,1180px);
+    margin:0 auto clamp(48px,6vw,76px);
+    text-align:center;
+    position:relative;
+  }
+  .work-page-header .lead{
+    width:min(860px,100%);
+  }
+  .work-hero-tags{
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    gap:12px;
+    margin:30px auto 0;
+  }
+  .work-hero-tags span{
+    display:inline-flex;
+    align-items:center;
+    min-height:42px;
+    border-radius:999px;
+    padding:11px 17px;
+    color:var(--mint-bright);
+    background:rgba(255,255,255,.08);
+    border:1px solid rgba(168,234,213,.2);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.09),0 14px 32px rgba(7,30,24,.12);
+    font-size:13px;
+    font-weight:900;
+    letter-spacing:.02em;
+  }
+  .experience-only-section{
+    margin-top:0;
+    padding-top:0;
+    border-top:0;
+    background:none;
+  }
+  .experience-only-section:before{display:none}
+  .experience-only-section .work-widgets{margin-top:0}
+
+  @media(max-width:1120px){
+    .hero-title{font-size:clamp(3.1rem,5.8vw,5.9rem);gap:clamp(18px,2.4vw,36px)}
+    .eyes-inline{width:clamp(185px,17vw,255px)}
+  }
+  @media(max-width:980px){
+    .about-intro-card{grid-template-columns:1fr;border-radius:36px}
+    .about-snapshot{grid-template-columns:repeat(3,minmax(0,1fr))}
+    .top-nav{gap:4px;font-size:14px;top:16px;padding:7px;max-width:calc(100vw - 24px);overflow:auto;justify-content:flex-start}
+    .top-nav a{padding:10px 11px}
+    .top-nav a.active:after{display:none}
+    .hero-title{
+      grid-template-columns:1fr;
+      justify-items:center;
+      gap:22px;
+      font-size:clamp(3.4rem,12vw,5.8rem);
+      text-align:center;
+    }
+    .hero-copy.left-copy,.hero-copy.right-copy{text-align:center;justify-self:center}
+    .hero-copy span{white-space:normal}
+    .spark.one{left:2%;top:68%}
+    .spark.two{right:2%;top:20%}
+    .work-heading{display:block}.work-heading p{margin-top:16px}
+    .work-widgets{grid-template-columns:1fr}
+    .panel,.panel.large,.panel.small{grid-column:1/-1}
+    .play-grid{grid-template-columns:1fr}
+  }
+  @media(max-width:620px){
+    .work-page-header{text-align:left}
+    .work-page-header .lead{margin-left:0;margin-right:0}
+    .work-hero-tags{justify-content:flex-start}
+    .about-intro-section{margin-top:38px}
+    .about-intro-card{padding:24px;border-radius:30px}
+    .about-snapshot{grid-template-columns:1fr}
+    .about-intro-copy h2{font-size:clamp(2.7rem,13vw,4.4rem)}
+    .route{padding:100px 18px 72px}
+    .hero{min-height:calc(100vh - 120px)}
+    .hero-title{font-size:clamp(3rem,14vw,4.8rem)}
+    .eyes-inline{margin:0 auto;width:min(50vw,190px)}
+    .subtitle{margin-top:32px}
+    .work-section{width:calc(100% + 36px);margin:42px -18px -72px;padding-inline:18px}
+    .work-card{padding:26px;border-radius:34px;min-height:380px}
+    .card-badge{width:54px;height:54px;font-size:24px}
+    .phone-mock{width:92%}
+  }
+
+
+  /* Floating chat button (Contact page only) */
+  .chatbot-fab{
+    position:fixed;
+    right:clamp(18px,3vw,32px);
+    bottom:clamp(18px,3vw,32px);
+    z-index:185;
+    width:58px;height:58px;
+    display:none;
+    align-items:center;justify-content:center;
+    border:none;border-radius:50%;
+    background:linear-gradient(135deg,#a8ead5,#8fdac0);
+    color:#0e221f;cursor:pointer;
+    box-shadow:0 14px 32px rgba(8,31,26,.4);
+    transition:transform .2s ease,box-shadow .2s ease;
+  }
+  .chatbot-fab:hover{transform:translateY(-3px) scale(1.05);box-shadow:0 18px 38px rgba(8,31,26,.48)}
+  body.route-contact .chatbot-fab{display:flex}
+  body.chatbot-open .chatbot-fab{display:none}
+
+  /* Resume chatbot */
+  .resume-chatbot-overlay{
+    position:fixed;
+    inset:0;
+    z-index:180;
+    pointer-events:none;
+    background:linear-gradient(90deg,transparent 0%,rgba(7,30,24,.18) 100%);
+    opacity:0;
+    transition:opacity .28s ease;
+  }
+  body.chatbot-open .resume-chatbot-overlay{
+    opacity:1;
+    pointer-events:auto;
+  }
+  .resume-chatbot{
+    position:fixed;
+    top:112px;
+    right:28px;
+    z-index:190;
+    width:min(450px,calc(100vw - 34px));
+    height:min(720px,calc(100vh - 138px));
+    display:flex;
+    flex-direction:column;
+    border-radius:22px;
+    overflow:hidden;
+    color:#d7eee5;
+    background:rgba(25,56,47,.98);
+    border:1.5px solid rgba(143,218,192,.72);
+    box-shadow:0 34px 90px rgba(6,28,22,.46), inset 0 1px 0 rgba(255,255,255,.12);
+    transform:translateX(calc(100% + 42px)) scale(.98);
+    opacity:0;
+    pointer-events:none;
+    transition:transform .34s cubic-bezier(.2,.82,.2,1),opacity .24s ease;
+  }
+  body.chatbot-open .resume-chatbot{
+    transform:translateX(0) scale(1);
+    opacity:1;
+    pointer-events:auto;
+  }
+  .chatbot-header{
+    flex:0 0 auto;
+    display:flex;
+    align-items:center;
+    gap:14px;
+    padding:20px 20px;
+    background:linear-gradient(135deg,rgba(168,234,213,.98),rgba(135,216,190,.96));
+    color:#173c35;
+  }
+  .chatbot-avatar{
+    width:54px;
+    height:54px;
+    border-radius:50%;
+    display:grid;
+    place-items:center;
+    flex:0 0 auto;
+    color:#e8fff7;
+    font-family:var(--font-title);
+    font-size:1.35rem;
+    font-weight:1000;
+    letter-spacing:-.02em;
+    background:radial-gradient(circle at 35% 28%,#9be7d2 0 22%,#0b5c53 23% 72%,#0b342f 73% 100%);
+    border:3px solid rgba(255,255,255,.9);
+    box-shadow:0 10px 24px rgba(12,55,48,.2);
+  }
+  .chatbot-title{min-width:0;line-height:1.1}
+  .chatbot-title b{
+    display:block;
+    font-family:var(--font-title);
+    font-size:1.45rem;
+    letter-spacing:-.02em;
+  }
+  .chatbot-title span{
+    display:block;
+    margin-top:4px;
+    font-weight:800;
+    color:#214941;
+  }
+  .chatbot-close{
+    margin-left:auto;
+    width:42px;
+    height:42px;
+    border:0;
+    border-radius:14px;
+    display:grid;
+    place-items:center;
+    cursor:pointer;
+    color:#173c35;
+    background:rgba(255,255,255,.08);
+    font-size:2rem;
+    line-height:1;
+    transition:background .2s ease,transform .2s ease;
+  }
+  .chatbot-close:hover{background:rgba(255,255,255,.3);transform:rotate(5deg)}
+  .chatbot-messages{
+    flex:1 1 auto;
+    overflow-y:auto;
+    padding:20px 20px 18px;
+    scrollbar-color:rgba(168,234,213,.8) rgba(9,37,31,.4);
+    scrollbar-width:thin;
+    background:
+      radial-gradient(circle at 18% 0%,rgba(143,218,192,.12),transparent 34%),
+      linear-gradient(180deg,rgba(26,58,48,.98),rgba(20,48,40,.98));
+  }
+  .chatbot-messages::-webkit-scrollbar{width:9px}
+  .chatbot-messages::-webkit-scrollbar-track{background:rgba(9,37,31,.4)}
+  .chatbot-messages::-webkit-scrollbar-thumb{background:rgba(168,234,213,.72);border-radius:999px}
+  .chat-row{display:flex;margin:0 0 12px}
+  .chat-row.user{justify-content:flex-end}
+  .chat-bubble{
+    max-width:88%;
+    border-radius:22px;
+    padding:15px 18px;
+    font-size:1rem;
+    line-height:1.5;
+    font-weight:760;
+    white-space:pre-line;
+    box-shadow:0 10px 24px rgba(5,25,20,.11);
+  }
+  .chat-row.bot .chat-bubble{
+    color:#d7eee5;
+    background:rgba(54,93,68,.72);
+    border-top-left-radius:9px;
+  }
+  .chat-row.user .chat-bubble{
+    color:#12342e;
+    background:linear-gradient(135deg,#a8ead5,#8fdac0);
+    border-top-right-radius:9px;
+  }
+  .chat-quick-wrap{
+    display:flex;
+    flex-direction:column;
+    align-items:flex-start;
+    gap:9px;
+    margin:16px 0 4px;
+  }
+  .chat-quick{
+    border:2px solid rgba(168,234,213,.9);
+    color:#a8ead5;
+    background:rgba(7,35,30,.3);
+    border-radius:999px;
+    padding:13px 17px;
+    font:inherit;
+    font-size:.95rem;
+    font-weight:900;
+    cursor:pointer;
+    transition:background .2s ease,transform .2s ease,box-shadow .2s ease;
+  }
+  .chat-quick:hover{
+    background:rgba(168,234,213,.12);
+    transform:translateX(4px);
+    box-shadow:0 0 0 5px rgba(168,234,213,.07);
+  }
+  .chatbot-inputbar{
+    flex:0 0 auto;
+    display:flex;
+    gap:10px;
+    align-items:center;
+    padding:14px;
+    border-top:1px solid rgba(143,218,192,.26);
+    background:rgba(17,44,37,.98);
+  }
+  .chatbot-inputbar input{
+    flex:1;
+    min-width:0;
+    border:1px solid rgba(168,234,213,.42);
+    border-radius:999px;
+    padding:14px 16px;
+    color:#eafff7;
+    background:rgba(255,255,255,.07);
+    outline:none;
+    font:inherit;
+    font-weight:760;
+  }
+  .chatbot-inputbar input::placeholder{color:rgba(215,238,229,.68)}
+  .chatbot-inputbar input:focus{border-color:rgba(168,234,213,.9);box-shadow:0 0 0 4px rgba(168,234,213,.1)}
+  .chatbot-send{
+    width:52px;
+    height:52px;
+    border:0;
+    border-radius:50%;
+    display:grid;
+    place-items:center;
+    cursor:pointer;
+    color:#173c35;
+    background:linear-gradient(135deg,#a8ead5,#8fdac0);
+    font-size:1.4rem;
+    font-weight:1000;
+    transition:transform .2s ease,box-shadow .2s ease;
+  }
+  .chatbot-send:hover{transform:translateY(-2px);box-shadow:0 12px 24px rgba(8,31,26,.24)}
+  .chatbot-inputbar input:disabled{
+    opacity:.68;
+    cursor:not-allowed;
+  }
+  .chatbot-send:disabled{
+    opacity:.48;
+    cursor:not-allowed;
+    transform:none;
+    box-shadow:none;
+  }
+  .chatbot-inputbar.waiting-review input{
+    opacity:1;
+    cursor:text;
+  }
+  .chatbot-hint{
+    flex:0 0 auto;
+    padding:0 18px 14px;
+    color:rgba(215,238,229,.64);
+    background:rgba(17,44,37,.98);
+    font-size:.78rem;
+    font-weight:750;
+    line-height:1.45;
+  }
+
+  @media(max-width:720px){
+    .resume-chatbot{
+      top:82px;
+      right:12px;
+      left:12px;
+      width:auto;
+      height:calc(100vh - 104px);
+      border-radius:20px;
+    }
+    .chatbot-header{padding:16px}
+    .chatbot-title b{font-size:1.25rem}
+    .chatbot-title span{font-size:.95rem}
+    .chatbot-avatar{width:48px;height:48px}
+  }
+
+  /* ===== Stimulus cabinet — warm lamplit wood console (Play) ===== */
+  .game-console{
+    position:relative;
+    margin:0;
+    border-radius:20px;
+    overflow:hidden;
+    border:1px solid rgba(214,168,112,.5);
+    background:#1c1208;
+    box-shadow:0 30px 70px rgba(8,4,0,.6),inset 0 0 0 6px rgba(229,193,88,.06);
+  }
+  .console-bar{
+    display:flex;align-items:center;gap:9px;
+    padding:13px 18px;
+    background:linear-gradient(180deg,#3a2817,#241811);
+    border-bottom:1px solid rgba(214,168,112,.3);
+  }
+  .console-dot{width:12px;height:12px;border-radius:50%;background:#5a4733}
+  .console-dot.r{background:#ff6b5f}.console-dot.y{background:#ffbd4a}.console-dot.g{background:#30c75a}
+  .console-title{margin-left:12px;color:#E7CFA3;font-weight:850;font-size:.92rem;letter-spacing:.02em}
+  .console-live{
+    margin-left:auto;display:inline-flex;align-items:center;gap:7px;
+    color:#F0D590;font-weight:900;font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;
+  }
+  .console-live:before{
+    content:"";width:9px;height:9px;border-radius:50%;background:#d69e30;
+    box-shadow:0 0 0 4px rgba(214,158,48,.2);animation:livedot 1.8s ease-in-out infinite;
+  }
+  @keyframes livedot{0%,100%{opacity:1}50%{opacity:.4}}
+  .console-screen{
+    position:relative;
+    min-height:clamp(330px,42vw,470px);
+    display:flex;flex-direction:column;
+    background:
+      radial-gradient(120% 90% at 50% 6%,rgba(255,198,110,.20),transparent 55%),
+      radial-gradient(140% 120% at 50% 122%,rgba(10,5,0,.66),transparent 60%),
+      linear-gradient(180deg,#3a2817 0%,#2a1d10 46%,#1c1208 100%);
+  }
+  .console-screen:after{
+    content:"";position:absolute;inset:0;pointer-events:none;
+    background:radial-gradient(80% 70% at 50% 45%,transparent 58%,rgba(8,4,0,.5) 100%);
+  }
+  .console-hud{display:flex;gap:10px;flex-wrap:wrap;padding:16px 18px;position:relative;z-index:1}
+  .hud-pill{
+    border-radius:999px;padding:8px 14px;
+    background:rgba(20,12,4,.6);border:1px solid rgba(214,168,112,.42);
+    color:#FFF6E4;font-weight:800;font-size:.82rem;
+  }
+  .hud-pill.hearts-pill{color:#D4845A;letter-spacing:3px}
+  .console-stage{
+    position:relative;z-index:1;flex:1;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    text-align:center;padding:18px 24px 46px;gap:4px;
+  }
+  .stage-kicker{margin:0;color:#C4884E;text-transform:uppercase;letter-spacing:.24em;font-size:12px;font-weight:900}
+  .stage-title{
+    margin:12px 0 0;color:#F0D590;font-family:var(--font-title);
+    font-size:clamp(3rem,7vw,5.2rem);line-height:.9;letter-spacing:6px;
+    text-shadow:0 2px 0 #6e4626,0 0 32px rgba(255,198,110,.35);
+  }
+  .stage-sub{margin:8px 0 28px;color:#E7CFA3;font-weight:600;font-style:italic;font-size:clamp(1rem,1.4vw,1.2rem)}
+  /* in-game wooden plaque button */
+  .console-play{
+    display:inline-flex;align-items:center;gap:10px;
+    font-family:var(--font-title);font-weight:bold;font-size:1.2rem;letter-spacing:.5px;
+    color:#FFF6E4;text-decoration:none;cursor:pointer;
+    padding:16px 40px;border-radius:999px;
+    background:linear-gradient(180deg,#B8824E,#966337 55%,#6E4626);
+    box-shadow:0 4px 0 #422816,0 12px 22px rgba(0,0,0,.5),inset 0 1px 0 rgba(214,168,112,.55);
+    text-shadow:0 1px 1px rgba(0,0,0,.5);
+    transition:transform .1s ease,filter .15s ease;
+  }
+  .console-play:hover{filter:brightness(1.08);transform:translateY(-2px)}
+  .console-play:active{transform:translateY(2px);box-shadow:0 1px 0 #422816,0 4px 10px rgba(0,0,0,.4),inset 0 1px 0 rgba(214,168,112,.55)}
+  .console-note{margin:18px auto 0;max-width:440px;color:rgba(231,207,163,.62);font-size:.82rem;font-weight:600;line-height:1.5;font-style:italic}
+
+  /* ===== Featured project card — two-column so it fills the full width ===== */
+  .panel.proj-feature{display:grid;grid-template-columns:1.55fr 1fr;gap:clamp(24px,3vw,48px);align-items:start}
+  .panel.proj-feature .pf-main{position:relative;z-index:1}
+  .panel.proj-feature .pf-main p{max-width:none}
+  .panel.proj-feature .pf-side{
+    position:relative;z-index:1;align-self:stretch;
+    border-radius:26px;padding:24px;
+    background:rgba(255,255,255,.32);border:1px solid rgba(255,255,255,.5);
+  }
+  .pf-side-label{margin:0 0 14px;color:#24544c;text-transform:uppercase;letter-spacing:.18em;font-size:12px;font-weight:950}
+  .panel.proj-feature .pf-side .chips{margin-top:0}
+  @media(max-width:980px){.panel.proj-feature{grid-template-columns:1fr}}
+
+  /* ===== In-progress / roadmap block ===== */
+  .ip-section-title{
+    margin:clamp(46px,6vw,82px) 0 0;
+    color:var(--mint);font-family:var(--font-title);
+    font-size:clamp(2.4rem,5.5vw,4.6rem);line-height:1;letter-spacing:-.02em;text-align:center;
+  }
+  .inprogress{
+    position:relative;
+    margin-top:clamp(18px,2.4vw,26px);
+    border-radius:42px;
+    padding:clamp(28px,4vw,52px);
+    background:
+      radial-gradient(circle at 8% 0%,rgba(217,161,241,.30),transparent 46%),
+      radial-gradient(circle at 94% 116%,rgba(143,218,192,.22),transparent 52%),
+      linear-gradient(150deg,#3b2c63 0%,#26314f 52%,#1b3f3a 100%);
+    border:1px solid rgba(217,161,241,.34);
+    box-shadow:0 40px 90px rgba(8,6,24,.4),inset 0 1px 0 rgba(255,255,255,.12);
+  }
+  .ip-pill{
+    display:inline-flex;align-items:center;gap:9px;
+    padding:8px 16px;border-radius:999px;
+    background:rgba(168,234,213,.14);border:1px solid rgba(168,234,213,.4);
+    color:var(--mint-bright);font-weight:900;font-size:12px;letter-spacing:.16em;text-transform:uppercase;
+  }
+  .ip-pill:before{content:"";width:9px;height:9px;border-radius:50%;background:var(--mint-bright);box-shadow:0 0 0 4px rgba(168,234,213,.18);animation:livedot 1.8s ease-in-out infinite}
+  .inprogress h2{margin:16px 0 0;color:var(--mint);font-family:var(--font-title);font-size:clamp(1.9rem,3.4vw,3.1rem);line-height:1.04;letter-spacing:-.02em}
+  .ip-lead{max-width:840px;margin:16px 0 0;color:var(--text);font-weight:680;line-height:1.7;font-size:clamp(1rem,1.2vw,1.18rem)}
+  .ip-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-top:28px}
+  .ip-card{border-radius:24px;padding:22px;background:rgba(255,255,255,.08);border:1px solid rgba(168,234,213,.18)}
+  .ip-card b{display:block;color:#eafff7;font-family:var(--font-title);font-size:1.18rem;letter-spacing:-.02em}
+  .ip-card span{display:block;margin-top:8px;color:var(--text-soft);font-weight:660;line-height:1.55}
+  .ip-tech{display:flex;flex-wrap:wrap;gap:10px;margin-top:26px}
+  .ip-tech span{border-radius:999px;padding:9px 14px;background:rgba(255,255,255,.08);border:1px solid rgba(168,234,213,.22);color:var(--mint-bright);font-size:13px;font-weight:850}
+  @media(max-width:760px){.ip-grid{grid-template-columns:1fr}}
+
+  /* ===== Contact methods ===== */
+  .contact-methods{
+    display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;
+    width:min(760px,100%);margin:44px auto 0;
+  }
+  .contact-method{
+    display:flex;flex-direction:column;gap:7px;text-align:left;
+    padding:22px 24px;border-radius:24px;
+    background:rgba(255,255,255,.08);border:1px solid rgba(168,234,213,.22);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.1);
+    transition:transform .2s ease,background .2s ease,border-color .2s ease;
+  }
+  a.contact-method:hover{transform:translateY(-4px);background:rgba(255,255,255,.14);border-color:rgba(168,234,213,.45)}
+  .cm-label{color:var(--mint-bright);font-size:12px;font-weight:950;text-transform:uppercase;letter-spacing:.18em}
+  .cm-value{color:var(--text);font-weight:850;font-size:1.04rem;word-break:break-word}
+  body.chatbot-open #contact .page{transition:transform .34s cubic-bezier(.2,.82,.2,1)}
+  @media(min-width:1080px){body.chatbot-open #contact .page{transform:translateX(-150px)}}
+  @media(max-width:620px){.contact-methods{grid-template-columns:1fr}}
+
+  /* ---- Very small phones: keep the nav + hero from cramping/overflowing ---- */
+  @media(max-width:430px){
+    .top-nav{font-size:12.5px;gap:2px;padding:6px}
+    .top-nav a{padding:8px 9px}
+    .hero-title{font-size:clamp(2.5rem,13vw,3.4rem)}
+    .about-intro-card{padding:20px}
+    .resume-chatbot{top:72px;height:calc(100dvh - 92px)}
+  }
+  /* Use dynamic viewport height on phones so full-height sections aren't cut
+     off behind the browser's address bar. */
+  @media(max-width:720px){
+    body{min-height:100dvh}
+  }
+
+</style>
+</head>
+<body>
+<nav aria-label="Primary" class="top-nav">
+    <a data-route="about" href="#about">About</a>
+    <a data-route="work" href="#work">Work</a>
+    <a data-route="projects" href="#projects">Projects</a>
+    <a data-route="play" href="#play">Play</a>
+    <a data-route="learnings" href="#learnings">Learnings</a>
+    <a data-route="contact" href="#contact" id="chatbotNav" aria-controls="resumeChatbot" aria-expanded="false">Contact</a>
+  </nav>
+<main>
+    <section class="route active" data-view="about" id="about">
+      <div class="hero">
+<div aria-hidden="true" class="spark one"><svg viewbox="0 0 100 100"><path d="M50 3c8 32 8 32 40 40-32 8-32 8-40 40-8-32-8-32-40-40 32-8 32-8 40-40Z" fill="currentColor"></path></svg></div>
+<div aria-hidden="true" class="spark two"><svg viewbox="0 0 100 100"><path d="M50 3c8 32 8 32 40 40-32 8-32 8-40 40-8-32-8-32-40-40 32-8 32-8 40-40Z" fill="currentColor"></path></svg></div>
+<div class="hero-core">
+<h1 class="hero-title">
+<span class="hero-copy left-copy">
+<span>Hi. I'm</span>
+<span>Rijul Sobti.</span>
+</span>
+<span aria-hidden="true" class="eyes-inline">
+<svg id="eyesSvg" viewbox="0 0 300 210" xmlns="http://www.w3.org/2000/svg">
+<ellipse cx="150" cy="191" fill="#0c2c29" opacity=".18" rx="88" ry="10"></ellipse>
+<g id="eyesGroup">
+<g>
+<ellipse cx="96" cy="104" fill="#f8fffb" rx="54" ry="61" stroke="#111111" stroke-width="7"></ellipse>
+<g id="pupilL">
+<circle cx="96" cy="104" fill="#111111" r="22"></circle>
+<circle cx="106" cy="94" fill="#f8fffb" r="7"></circle>
+<circle cx="90" cy="114" fill="#f8fffb" opacity=".7" r="4"></circle>
+</g>
+<clippath id="clipL"><ellipse cx="96" cy="104" rx="55" ry="62"></ellipse></clippath>
+<rect clip-path="url(#clipL)" fill="#111111" height="126" id="lidL" transform="translate(0,-132)" width="120" x="36" y="40"></rect>
+</g>
+<g>
+<ellipse cx="204" cy="104" fill="#f8fffb" rx="54" ry="61" stroke="#111111" stroke-width="7"></ellipse>
+<g id="pupilR">
+<circle cx="204" cy="104" fill="#111111" r="22"></circle>
+<circle cx="214" cy="94" fill="#f8fffb" r="7"></circle>
+<circle cx="198" cy="114" fill="#f8fffb" opacity=".7" r="4"></circle>
+</g>
+<clippath id="clipR"><ellipse cx="204" cy="104" rx="55" ry="62"></ellipse></clippath>
+<rect clip-path="url(#clipR)" fill="#111111" height="126" id="lidR" transform="translate(0,-132)" width="120" x="144" y="40"></rect>
+</g>
+<path d="M56 40 Q96 24 136 40" fill="none" id="browL" stroke="#111111" stroke-linecap="round" stroke-width="10"></path>
+<path d="M164 40 Q204 24 244 40" fill="none" id="browR" stroke="#111111" stroke-linecap="round" stroke-width="10"></path>
+<path d="M132 156 Q150 164 168 156" fill="none" id="mouth" stroke="#111111" stroke-linecap="round" stroke-width="7"></path>
+</g>
+</svg>
+</span>
+<span class="hero-copy right-copy">
+<span>I'm a curious</span>
+<span>developer.</span>
+</span>
+</h1>
+<p class="subtitle">I build thoughtful, human-centered digital experiences and love solving problems that make a difference.</p>
+</div>
+</div>
+
+      <section aria-label="About Rijul" class="about-intro-section">
+        <div class="about-intro-card">
+          <div class="about-intro-copy">
+            <p class="about-eyebrow">About me</p>
+            <h2>Curious by nature, developer by craft.</h2>
+            <p class="about-text">I'm Rijul — a Sydney-based developer and Computer Science graduate who genuinely enjoys taking things apart to understand how they work, then putting them back together a little better. I like building software that's actually useful to the person on the other side of the screen, whether that's a clean API, a reliable system, or a small game that brightens someone's day.</p>
+            <p class="about-text">I'm curious, calm under pressure, and happiest when I'm learning something new — lately that's been diving into AI/ML. I care about doing things properly: readable code, clear communication, and following a problem all the way to a real fix instead of a quick patch. Away from the keyboard I'm the kind of person who likes a good challenge, asks a lot of questions, and enjoys helping people get unstuck.</p>
+            <div class="about-intro-tags"><span>Curious</span><span>Calm under pressure</span><span>Detail-oriented</span><span>Always learning</span><span>Loves a challenge</span></div>
+          </div>
+          <div class="about-snapshot" aria-label="Academic achievements">
+            <p class="snapshot-label">Academic achievements</p>
+            <div class="snapshot-tile"><b>B.CompSci</b><span>Software Engineering major, University of Wollongong — GPA 6.375 / 7.</span></div>
+            <div class="snapshot-tile"><b>Dean's Merit Award</b><span>Recognised for academic excellence.</span></div>
+            <div class="snapshot-tile"><b>37% Scholarship</b><span>Awarded for academic achievement.</span></div>
+          </div>
+        </div>
+      </section>
+
+      <section aria-label="Technical skills" class="work-section about-skills-section">
+<div class="work-wrap">
+<div class="work-heading">
+<h2>Technical skills.</h2>
+</div>
+<div class="grid skills-grid">
+<article class="panel large cyan skill-card">
+<p class="kicker">Support &amp; ITSM</p>
+<h2>Support flow.</h2>
+<p>Level 1 &amp; Level 2 Support, Help Desk, Incident Management, Service Request Fulfilment, SLA Management, Escalation Handling, Jira Service Management, Zendesk, ServiceNow foundational knowledge, ITIL practices, and Ticket Documentation.</p>
+<div class="chips"><span>L1/L2 Support</span><span>Incident Management</span><span>SLA Management</span><span>Jira Service Management</span><span>Zendesk</span><span>ServiceNow</span><span>ITIL practices</span><span>Ticket Documentation</span></div>
+</article>
+<article class="panel small white skill-card">
+<p class="kicker">Systems &amp; Admin</p>
+<h2>Access work.</h2>
+<p>Microsoft 365 / Office 365 Admin, Active Directory, Azure AD / Entra ID, Intune foundational knowledge, User &amp; License Management, Onboarding &amp; Offboarding, Password Resets, Windows 10/11, Windows Server, and Linux.</p>
+<div class="chips"><span>Microsoft 365</span><span>Office 365 Admin</span><span>Active Directory</span><span>Azure AD / Entra ID</span><span>Intune</span><span>User &amp; License Management</span><span>Windows 10/11</span><span>Windows Server</span><span>Linux</span></div>
+</article>
+<article class="panel peach skill-card">
+<p class="kicker">Networking</p>
+<h2>Connectivity.</h2>
+<p>TCP/IP, LAN/WAN, VPN, HTTP/HTTPS, reverse proxy (Nginx), Remote Desktop, Routing Protocols, and Network Troubleshooting.</p>
+<div class="chips"><span>TCP/IP</span><span>LAN/WAN</span><span>VPN</span><span>HTTP/HTTPS</span><span>Reverse proxy</span><span>Remote Desktop</span><span>Routing Protocols</span><span>Network Troubleshooting</span></div>
+</article>
+<article class="panel purple skill-card">
+<p class="kicker">Programming</p>
+<h2>Code base.</h2>
+<p>Java, JavaScript, TypeScript, Python, HTML/CSS, HTML5 Canvas, and SQL.</p>
+<div class="chips"><span>Java</span><span>JavaScript</span><span>TypeScript</span><span>Python</span><span>HTML/CSS</span><span>HTML5 Canvas</span><span>SQL</span></div>
+</article>
+<article class="panel white skill-card">
+<p class="kicker">Frameworks &amp; Tools</p>
+<h2>Build tools.</h2>
+<p>Django, Django REST Framework, Angular, Spring Boot, Node.js, RESTful APIs, JWT authentication, Docker, Nginx, AWS, GitHub Actions CI/CD, Gunicorn, WhiteNoise, OpenAPI/Swagger, Git, Postman, and Figma.</p>
+<div class="chips"><span>Django</span><span>Django REST Framework</span><span>Angular</span><span>Spring Boot</span><span>Node.js</span><span>RESTful APIs</span><span>JWT Auth</span><span>Docker</span><span>Nginx</span><span>AWS</span><span>GitHub Actions CI/CD</span><span>Gunicorn</span><span>WhiteNoise</span><span>OpenAPI/Swagger</span><span>Git</span><span>Postman</span><span>Figma</span></div>
+</article>
+<article class="panel cyan skill-card">
+<p class="kicker">Data &amp; Domain</p>
+<h2>Data &amp; AI.</h2>
+<p>PostgreSQL, Redis caching, NoSQL, LLM / Gemini API integration, Data Validation &amp; Quality Checks, Practice Management Systems, Healthcare IT, SaaS Support, and Knowledge Base Documentation.</p>
+<div class="chips"><span>PostgreSQL</span><span>Redis</span><span>NoSQL</span><span>LLM / Gemini API</span><span>Data Validation</span><span>Quality Checks</span><span>Practice Management Systems</span><span>Healthcare IT</span><span>SaaS Support</span><span>Knowledge Base</span></div>
+</article>
+</div></div>
+</section>
+    </section>
+
+    <section class="route" data-view="work" id="work">
+      <div class="work-page-header">
+        <div class="page">
+          <h1>Work.</h1>
+          <p class="lead">My experience connects IT support, SaaS troubleshooting, technical research, data analysis, and customer-facing problem solving. Click any card to open the full role description, tools used, and the work I handled.</p>
+          <div class="work-hero-tags" aria-label="Work focus areas">
+            <span>IT Support</span>
+            <span>Healthcare SaaS</span>
+            <span>Technical Research</span>
+            <span>Data Analysis</span>
+            <span>Customer Service</span>
+          </div>
+        </div>
+      </div>
+      <section aria-label="Professional experience cards" class="work-section experience-only-section">
+<div class="work-wrap">
+<div class="work-widgets">
+<a class="work-card purple" data-case="pencs" href="#work">
+<div class="card-head">
+<p class="card-kicker">PenCS · Apr 2026 – Present</p>
+<h3>IT Support / Help Desk Analyst.</h3>
+<div class="job-meta"><span>Healthcare SaaS</span><span>L1/L2 Support</span><span>Jira + Zendesk</span></div>
+<p>Supporting cloud-based clinical software, user access, incidents, data checks, onboarding, and escalations.</p>
+<ul class="mini-list">
+<li>Phone, email, and ticketing support</li>
+<li>Microsoft 365, AD, Entra ID</li>
+<li>SLA tracking and clean documentation</li>
+</ul>
+</div>
+<div class="mock-window">
+<div class="mock-bar purple-bar">
+<span class="logo-mark"></span>
+<span class="bar-pill long"></span>
+<span class="bar-pill mid"></span>
+<span class="bar-pill short"></span>
+</div>
+<div class="mock-body">
+<span class="mini-label">Support queue</span>
+<h4 class="mock-title">Clinical software issue triaged and resolved</h4>
+<div class="line w90"></div>
+<div class="line w80"></div>
+<div class="line w68"></div>
+<div class="button-row"><span class="mock-btn light"></span><span class="mock-btn"></span></div>
+</div>
+</div>
+</a>
+<a class="work-card gold" data-case="library" href="#work">
+<div class="card-head">
+<p class="card-kicker">University Library · Feb 2024 – May 2024</p>
+<h3>Student IT Support Assistant.</h3>
+<div class="job-meta"><span>L1 Helpdesk</span><span>Moodle + O365</span><span>ITIL-style</span></div>
+<p>Front-line campus helpdesk for students and staff — logins, VPN, submission portals, Microsoft 365, and Windows devices.</p>
+<ul class="mini-list">
+<li>Ticketing, SLA tracking, escalation notes</li>
+<li>Account, VPN, and O365 troubleshooting</li>
+<li>Windows 10/11 desktop support</li>
+</ul>
+</div>
+<div class="mock-window">
+<div class="mock-bar">
+<span class="logo-mark"></span>
+<span class="bar-pill long"></span>
+<span class="bar-pill mid"></span>
+<span class="bar-pill short"></span>
+</div>
+<div class="mock-body">
+<span class="mini-label">Helpdesk ticket</span>
+<h4 class="mock-title">Student login &amp; submission-portal access restored</h4>
+<div class="line w90"></div>
+<div class="line w80"></div>
+<div class="line w68"></div>
+<div class="button-row"><span class="mock-btn light"></span><span class="mock-btn"></span></div>
+</div>
+</div>
+</a>
+<a class="work-card cyan" data-case="tymlez" href="#work">
+<div class="card-head">
+<p class="card-kicker">Tymlez Group Limited · Jun 2023 – Aug 2023</p>
+<h3>Technical Research Intern.</h3>
+<div class="job-meta"><span>Blockchain</span><span>Research</span><span>Reports</span></div>
+<p>Researched technology innovation, industry trends, competitor strategy, and operational improvement opportunities.</p>
+<ul class="mini-list">
+<li>Technology-innovation assessment</li>
+<li>Competitor and market research</li>
+<li>Senior leadership recommendations</li>
+</ul>
+</div>
+<div class="mock-window">
+<div class="mock-bar">
+<span class="logo-mark"></span>
+<span class="bar-pill long"></span>
+<span class="bar-pill short"></span>
+<span class="bar-pill mid"></span>
+<span class="bar-pill long"></span>
+</div>
+<div class="mock-body">
+<span class="mini-label">Research report</span>
+<h4 class="mock-title">Innovation assessment with prioritised recommendations</h4>
+<div class="line w90"></div>
+<div class="line w90"></div>
+<div class="line w80"></div>
+<div class="line w44"></div>
+</div>
+</div>
+</a>
+<a class="work-card peach" data-case="kilbaha" href="#work">
+<div class="card-head">
+<p class="card-kicker">Kilbaha Education · Sep 2023 – Oct 2023</p>
+<h3>Intern.</h3>
+<div class="job-meta"><span>Education</span><span>Data Analysis</span><span>Strategy</span></div>
+<p>Analysed customer behaviour, competitor activity, market opportunities, and growth strategy for an Australian publisher.</p>
+<ul class="mini-list">
+<li>Customer behaviour evaluation</li>
+<li>Market-positioning insights</li>
+<li>Multi-phase strategy presentation</li>
+</ul>
+</div>
+<div class="mock-code">
+<div class="code-top"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+<div class="code-body">
+<span><span class="code-muted">// strategy snapshot</span></span>
+<span><span class="code-blue">input</span>: customer_data</span>
+<span><span class="code-green">analyse</span>: segments</span>
+<span><span class="code-green">compare</span>: competitors</span>
+<span><span class="code-green">output</span>: growth_plan</span>
+</div>
+</div>
+</a>
+<a class="work-card blue" data-case="uber" href="#work">
+<div class="card-head">
+<p class="card-kicker">Uber Eats · Mar 2022 – Present</p>
+<h3>Delivery Driver.</h3>
+<div class="job-meta"><span>Customer Service</span><span>Problem Solving</span><span>Time Management</span></div>
+<p>Built calm, customer-facing problem solving habits under time pressure across high-volume delivery shifts.</p>
+</div>
+<div class="status-grid">
+<div class="status-tile"><div class="status-dot"></div><b>On time</b><span>delivery focus</span></div>
+<div class="status-tile"><div class="status-dot"></div><b>GPS</b><span>route changes</span></div>
+<div class="status-tile"><div class="status-dot"></div><b>Users</b><span>clear comms</span></div>
+<div class="status-tile"><div class="status-dot"></div><b>Calm</b><span>pressure handling</span></div>
+</div>
+</a>
+</div>
+</div>
+</section>
+    </section>
+
+
+<section class="route" data-view="projects" id="projects">
+<div class="page">
+<h1>Projects.</h1>
+<p class="lead">Software projects from my Computer Science degree, focused on full-stack development, APIs, caching, microservices, and event-driven system design.</p>
+<div class="grid">
+<article class="panel large purple">
+<p class="kicker">Mar 2023 – Jun 2023 · Angular + Node</p>
+<h2>Task marketplace.</h2>
+<p>Built a full-stack task-outsourcing marketplace using Angular 15, TypeScript, HTML5, CSS3, Node.js, Express, MongoDB Atlas, Redis, and RESTful APIs. The app enabled users to outsource household tasks, used Angular services for data transfer, and used Redis with MongoDB Atlas to support real-time analytics and reduce query latency.</p>
+<div class="chips"><span>Angular 15</span><span>TypeScript</span><span>Node.js</span><span>Express</span><span>MongoDB Atlas</span><span>Redis</span><span>RESTful APIs</span></div>
+<div class="learning-note"><strong>Learning:</strong> I learned how frontend screens, backend APIs, database design, and caching need to work together to make a system feel fast and reliable for real users.</div>
+</article>
+<article class="panel small peach">
+<p class="kicker">Aug 2023 – Oct 2023 · Java + Spring</p>
+<h2>Microservices.</h2>
+<p>Designed an e-commerce microservices platform using Java, Spring Boot, Spring Data JPA, RESTful APIs, Apache Kafka, and Linux. The platform used REST for service communication and Kafka for asynchronous messaging and real-time data consistency.</p>
+<div class="chips"><span>Java</span><span>Spring Boot</span><span>Spring Data JPA</span><span>Apache Kafka</span><span>Linux</span><span>RESTful APIs</span></div>
+<div class="learning-note"><strong>Learning:</strong> I learned how to split a larger system into smaller services, keep data flowing between them, and design for scalability instead of only building for a simple demo.</div>
+</article>
+<article class="panel cyan proj-feature" style="grid-column:1/-1">
+<div class="pf-main">
+<p class="kicker">Full-stack · Django + TypeScript + Python</p>
+<h2>This portfolio &amp; Stimulus.</h2>
+<p>A full-stack portfolio website built with Django and Django REST Framework that also acts as the backend for my Stimulus game. It serves this single-page site, exposes a JWT-secured game API, caches a leaderboard in Redis, persists data in PostgreSQL, and powers the Contact chatbot through the Gemini API (the key stays server-side). The whole app is containerised with Docker behind Nginx, documented with OpenAPI/Swagger, and shipped to AWS through a GitHub Actions CI/CD pipeline.</p>
+<p>Stimulus is a warm, narrative puzzle game where every puzzle nudges you toward one small act of self-care. It was first built in Python — a downloadable Python version of the game still exists — and then rebuilt as a browser game using a custom TypeScript engine with HTML5 Canvas effects, wired to the Django backend so players can save their coins, progress, and the letters they have read.</p>
+<div class="learning-note"><strong>Learning:</strong> Building the site and game together showed me how one Django backend can power very different frontends — a marketing site, an AI chatbot, and a real-time game — and how auth, caching, containers, and CI/CD fit together to ship something to production.</div>
+</div>
+<div class="pf-side">
+<p class="pf-side-label">Built &amp; engineered with</p>
+<div class="chips"><span>Django 5</span><span>Django REST Framework</span><span>Python</span><span>PostgreSQL</span><span>Redis</span><span>JWT Auth</span><span>Gemini API</span><span>TypeScript</span><span>HTML5</span><span>CSS3</span><span>Canvas</span><span>Docker</span><span>Nginx</span><span>AWS</span><span>GitHub Actions CI/CD</span><span>Gunicorn</span><span>WhiteNoise</span><span>OpenAPI/Swagger</span></div>
+</div>
+</article>
+</div>
+
+<h2 class="ip-section-title">In progress.</h2>
+<section aria-label="In progress" class="inprogress">
+<span class="ip-pill">Currently building</span>
+<h2>Turning Stimulus into an AI self-reflection tool.</h2>
+<p class="ip-lead">Alongside going deeper into AI/ML, I'm evolving Stimulus from a self-care puzzle game into an AI-powered self-reflection companion — one that uses an LLM to turn small daily check-ins into gentle, personalised insight, so the game does not just suggest self-care but actually helps you understand yourself over time.</p>
+<div class="ip-grid">
+<div class="ip-card"><b>Letters that know you</b><span>An LLM writes each new letter from your recent check-ins and reflections, so the story and its nudges adapt to how your week actually went.</span></div>
+<div class="ip-card"><b>Reflection journal</b><span>Write a line after each task; the model surfaces recurring themes, moods, and small wins, then reflects them back to you with warmth.</span></div>
+<div class="ip-card"><b>Gentle weekly insight</b><span>An AI-generated summary of what you did for yourself, your patterns over time, and one small, encouraging suggestion for the week ahead.</span></div>
+<div class="ip-card"><b>Adaptive, mood-aware nudges</b><span>Sentiment analysis tunes the next task to where you are — creative, restful, social, or grounding — instead of one-size-fits-all prompts.</span></div>
+</div>
+<div class="ip-tech"><span>Python</span><span>AI / ML</span><span>LLM integration</span><span>Sentiment analysis</span><span>Prompt engineering</span><span>Django REST</span></div>
+</section>
+</div>
+</section>
+<section class="route" data-view="play" id="play">
+<div class="page">
+<h1>Play.</h1>
+<p class="lead">A game I designed and built from the ground up.</p>
+
+<div class="game-feature">
+  <span class="gf-eyebrow">Now playing · hosted on this site</span>
+  <h2>Stimulus</h2>
+
+  <div class="gf-theme">
+    Most games pull you away from your life. <b>Stimulus tries to give it back.</b> Every puzzle is tied to a tiny, achievable act of looking after yourself — the kind of thing that's easy to forget when days blur together. It's motivation by design: small wins, gentle encouragement, and a room that quietly fills with the evidence that you showed up for yourself. A game that wants you to close it and go do the thing.
+  </div>
+
+  <div class="game-console">
+    <div class="console-bar">
+      <span class="console-dot r"></span><span class="console-dot y"></span><span class="console-dot g"></span>
+      <span class="console-title">Stimulus — The Attic</span>
+      <span class="console-live">Live</span>
+    </div>
+    <div class="console-screen">
+      <div class="console-hud">
+        <span class="hud-pill hearts-pill">♥ ♥ ♥</span>
+        <span class="hud-pill">◎ 240 coins</span>
+        <span class="hud-pill">✦ Day 3</span>
+      </div>
+      <div class="console-stage">
+        <p class="stage-kicker">A quiet, lamplit attic</p>
+        <h3 class="stage-title">STIMULUS</h3>
+        <p class="stage-sub">A letter is waiting for you.</p>
+        <a class="console-play" href="/play/game/" target="_blank" rel="noopener">▸ Play now</a>
+        <p class="console-note">Opens in a new window · play as a guest, or set up a profile to keep your coins, shop, and letters.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="gf-tech-label">Built &amp; engineered with</div>
+  <div class="gf-tech">
+    <span class="gf-chip">Python <small>original build</small></span>
+    <span class="gf-chip">Django <small>REST API</small></span>
+    <span class="gf-chip">PostgreSQL <small>persistence</small></span>
+    <span class="gf-chip">JWT <small>auth</small></span>
+    <span class="gf-chip">Redis <small>leaderboard cache</small></span>
+    <span class="gf-chip">TypeScript <small>game engine</small></span>
+    <span class="gf-chip">HTML5 + CSS3</span>
+    <span class="gf-chip">Canvas <small>effects</small></span>
+    <span class="gf-chip">Docker</span>
+    <span class="gf-chip">AWS <small>deploy</small></span>
+    <span class="gf-chip">GitHub Actions <small>CI/CD</small></span>
+  </div>
+</div>
+</div>
+</section>
+<section class="route" data-view="learnings" id="learnings">
+<div class="page">
+<h1>Learnings.</h1>
+<p class="lead">The lessons that shaped how I build software — drawn from my full-stack projects and sharpened by hands-on systems and support work.</p>
+<div class="grid">
+<article class="panel cyan">
+<p class="kicker">Architecture</p>
+<h2>Design the whole system.</h2>
+<p>Building full-stack apps with Angular, Spring Boot, Node.js, Redis, MongoDB, and Kafka taught me to design for the entire journey of data — input, validation, API contracts, caching, and events — instead of just making one screen work in isolation.</p>
+</article>
+<article class="panel white">
+<p class="kicker">Debugging</p>
+<h2>Reason from the symptoms.</h2>
+<p>Resolving real incidents sharpened the way I debug code: reproduce the issue, isolate the cause from the noise, check logs and edge cases, then verify the fix. That same discipline is what keeps my software stable once it ships.</p>
+</article>
+<article class="panel peach">
+<p class="kicker">IT Support</p>
+<h2>Solve it for the user.</h2>
+<p>Level 1 and Level 2 helpdesk work across Microsoft 365, Active Directory, Entra ID, VPN, and Windows devices taught me to diagnose issues fast, prioritise against SLAs, escalate cleanly, and document every step — keeping users unblocked while staying calm under pressure.</p>
+</article>
+<article class="panel purple">
+<p class="kicker">APIs &amp; data</p>
+<h2>Design clean contracts.</h2>
+<p>Working with RESTful APIs, JWT auth, Redis caching, and Kafka messaging taught me to design clear, well-documented interfaces between services — so systems stay decoupled, scalable, and easy for the next developer to build on.</p>
+</article>
+<article class="panel white">
+<p class="kicker">Shipping</p>
+<h2>Get it to production.</h2>
+<p>Docker, GitHub Actions, and AWS taught me that writing the code is only half the job. I learned to containerise, automate testing and deployment, and actually run software in production instead of leaving it as a local demo.</p>
+</article>
+<article class="panel cyan">
+<p class="kicker">Craft</p>
+<h2>Write code people can read.</h2>
+<p>Documentation, technical writing, and customer-facing work trained me to write for the next person — which carries straight into readable code, clear commits and pull requests, and APIs a teammate can pick up without a handover.</p>
+</article>
+</div>
+</div>
+</section>
+<section class="route" data-view="contact" id="contact">
+<div class="page">
+<h1>Contact.</h1>
+<p class="lead">Sydney, NSW — open to graduate developer, software engineering, and IT support roles. The fastest way to reach me is email, or say hi to my bot on the right.</p>
+<a class="contact-link" href="mailto:rijulsobti575@gmail.com"><span>Let's</span><span>talk.</span></a>
+<div class="contact-methods">
+<a class="contact-method" href="mailto:rijulsobti575@gmail.com">
+<span class="cm-label">Email</span>
+<span class="cm-value">rijulsobti575@gmail.com</span>
+</a>
+<a class="contact-method" href="https://linkedin.com/in/rijul-sobti" target="_blank" rel="noopener">
+<span class="cm-label">LinkedIn</span>
+<span class="cm-value">linkedin.com/in/rijul-sobti</span>
+</a>
+<div class="contact-method">
+<span class="cm-label">Location</span>
+<span class="cm-value">Sydney, NSW · open to relocate</span>
+</div>
+<div class="contact-method">
+<span class="cm-label">Availability</span>
+<span class="cm-value">Open to new roles &amp; freelance</span>
+</div>
+</div>
+</div>
+</section>
+<section class="route" data-view="case" id="case">
+<div class="case-wrap">
+<a class="case-back" href="#work">← Back to work</a>
+<p class="case-kicker" id="caseKicker">Support workflow</p>
+<h1 class="case-title" id="caseTitle">Ticket triage.</h1>
+<h2 class="case-h2">Overview</h2>
+<div class="case-body" id="caseBody"></div>
+</div>
+</section>
+</main>
+
+<button class="chatbot-fab" id="chatbotFab" type="button" aria-label="Open chat with Rijul Bot">
+  <svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path fill="currentColor" d="M12 3C6.99 3 3 6.36 3 10.5c0 2.2 1.13 4.17 2.94 5.52-.13 1.07-.6 2.16-1.45 3.06-.2.21-.06.56.23.58 1.7.12 3.32-.45 4.55-1.4 1.16.36 2.42.54 3.73.54 5.01 0 9-3.36 9-7.5S17.01 3 12 3Z"/><circle cx="8.5" cy="10.5" r="1.3" fill="#0e221f"/><circle cx="12" cy="10.5" r="1.3" fill="#0e221f"/><circle cx="15.5" cy="10.5" r="1.3" fill="#0e221f"/></svg>
+</button>
+<div class="resume-chatbot-overlay" id="chatbotOverlay" aria-hidden="true"></div>
+<aside class="resume-chatbot" id="resumeChatbot" role="dialog" aria-modal="true" aria-labelledby="chatbotHeading" aria-hidden="true">
+  <header class="chatbot-header">
+    <div class="chatbot-avatar" aria-hidden="true">RS</div>
+    <div class="chatbot-title">
+      <b id="chatbotHeading">Rijul Bot</b>
+      <span>Ask me a question</span>
+    </div>
+    <button class="chatbot-close" id="chatbotClose" type="button" aria-label="Close resume chatbot">×</button>
+  </header>
+  <div class="chatbot-messages" id="chatbotMessages" aria-live="polite"></div>
+  <form class="chatbot-inputbar" id="chatbotForm" autocomplete="off">
+    <input id="chatbotInput" type="text" placeholder="Ask me a question…" aria-label="Ask Rijul Bot a question" />
+    <button class="chatbot-send" type="submit" aria-label="Send message">➜</button>
+  </form>
+  <div class="chatbot-hint">Pick a quick option or type your own question — the AI will answer.</div>
+</aside>
+
+<script>
+  const nav=document.querySelector(".top-nav");
+  const links=[...document.querySelectorAll("[data-route]")];
+  const views=[...document.querySelectorAll("[data-view]")];
+
+  const CASES={
+    pencs:{
+      kicker:"PenCS · Apr 2026 – Present",
+      title:"IT Support / Help Desk Analyst.",
+      body:[
+        "PenCS is an Australian SaaS health-informatics company that delivers cloud-based clinical software and population health tools to primary care practices and Aboriginal Community Controlled Health Organisations (ACCHOs) across Australia.",
+        "In this role I support users, systems, data quality, onboarding, vendors, and escalation workflows across a healthcare SaaS environment."
+      ],
+      tags:["Level 1 & Level 2 Support","Jira Service Management","Zendesk","Microsoft 365","Active Directory","Azure AD / Entra ID","SLA adherence","Knowledge base"],
+      details:[
+        "Deliver Level 1 and Level 2 end-user support via phone, email, and ticketing system, diagnosing and resolving software, hardware, and connectivity issues to minimise downtime across a diverse client base.",
+        "Manage and prioritise incidents and service requests in Jira Service Management and Zendesk against SLA targets, maintaining accurate documentation and consistent SLA adherence through to closure.",
+        "Administer Microsoft 365 (Office 365) environments and Active Directory, managing user accounts, groups, permissions, licensing, onboarding and offboarding, and password resets via the Office 365 admin portal and Azure AD / Entra ID.",
+        "Escalate complex incidents to Level 2 and specialist resolver teams with clear diagnostic context, following ITIL-aligned escalation procedures.",
+        "Conduct monthly data-submission checks across client practices to verify accuracy and compliance with operational standards, identifying and resolving data quality issues proactively.",
+        "Coordinate with third-party vendors to resolve issues within agreed service levels, and support system installations and client onboarding sessions.",
+        "Monitor system performance across Windows Server and client environments, recommending upgrades to reduce recurring issues; contribute to knowledge base articles to improve first-contact resolution rates."
+      ]
+    },
+    library:{
+      kicker:"University Library · Feb 2024 – May 2024",
+      title:"Student IT Support Assistant.",
+      body:[
+        "As a Student IT Support Assistant at the university library, I provided front-line technical support to students and staff across the campus's core learning and productivity systems.",
+        "The role centred on Level 1 helpdesk support, ticketing, troubleshooting, and ITIL-style incident and service-request handling."
+      ],
+      tags:["Level 1 Helpdesk","Moodle","Microsoft 365 / O365","VPN","Windows 10/11","Ticketing","SLA prioritisation","ITIL-style escalation"],
+      details:[
+        "Provided Level 1 helpdesk and end-user support to students and staff using Moodle, university websites, online submission portals, Microsoft 365/O365, VPN, Windows 10/11 devices, and basic Windows Server-related access environments.",
+        "Logged, updated, and resolved support tickets using ticketing workflows similar to Jira Service Management and Zendesk, documenting incidents, troubleshooting steps, outcomes, SLA status, and escalation notes.",
+        "Troubleshot common access and technical issues including login errors, account access, VPN connectivity, file upload problems, browser issues, O365 problems, and basic desktop support requests.",
+        "Supported ITIL-style incident management and service request fulfilment by prioritising tickets against SLA expectations, escalating unresolved issues to central IT teams, and maintaining clear customer communication."
+      ]
+    },
+    tymlez:{
+      kicker:"Tymlez Group Limited · Jun 2023 – Aug 2023",
+      title:"Technical Research Intern.",
+      body:[
+        "Tymlez Group Limited is an enterprise-grade, sustainability-focused provider of blockchain-based software solutions.",
+        "This internship focused on technical research, innovation assessment, competitor analysis, reporting, and recommendation building."
+      ],
+      tags:["Technical research","Innovation assessment","Competitor analysis","Digital presence","Reports","Recommendations"],
+      details:[
+        "Executed technology-innovation assessments against organisational benchmarks to support trial and cross-departmental adoption decisions.",
+        "Monitored industry trends and competitor activity to identify growth opportunities and operational improvements.",
+        "Analysed competitor strategies and delivered data-driven reports informing customer-engagement and digital-presence initiatives.",
+        "Produced a final report for senior leadership with technical evaluations and prioritised recommendations for future development."
+      ]
+    },
+    kilbaha:{
+      kicker:"Kilbaha Education · Sep 2023 – Oct 2023",
+      title:"Intern.",
+      body:[
+        "Kilbaha Education is an Australian educational publisher delivering curriculum-aligned digital resources and assessment tools to schools.",
+        "This role combined customer behaviour analysis, competitor research, dataset review, and strategy presentation work."
+      ],
+      tags:["Customer behaviour","Competitor activity","Market positioning","Datasets","Growth strategy","Presentation"],
+      details:[
+        "Evaluated customer behaviour and competitor activity to inform market-positioning and service-adaptation decisions.",
+        "Analysed datasets to identify untapped market segments, aligning findings with long-term growth objectives.",
+        "Developed and presented a multi-phase growth strategy and technical assessment to senior management."
+      ]
+    },
+    uber:{
+      kicker:"Uber Eats · Mar 2022 – Present",
+      title:"Delivery Driver.",
+      body:[
+        "This role strengthened my customer-facing communication, independent problem solving, time management, and ability to stay calm under pressure.",
+        "I use these habits in IT support when users need quick, clear, and professional help."
+      ],
+      tags:["Customer service","Time management","Problem solving","Route changes","Communication","Professionalism"],
+      details:[
+        "Maintain an accurate, on-time delivery record across high-volume shifts, independently resolving route changes, order issues, and customer concerns under time pressure.",
+        "Developed strong customer-facing communication, real-world problem-solving, and time management skills that directly translate to high-pressure IT support environments where responsiveness and professionalism matter."
+      ]
+    }
+  };
+
+  const caseKicker=document.getElementById("caseKicker");
+  const caseTitle=document.getElementById("caseTitle");
+  const caseBody=document.getElementById("caseBody");
+  let currentCase="pencs";
+
+  function renderCase(key){
+    const data=CASES[key]||CASES.pencs;
+    currentCase=key in CASES?key:"pencs";
+    caseKicker.textContent=data.kicker;
+    caseTitle.textContent=data.title;
+    let html=data.body.map(t=>`<p>${t}</p>`).join("");
+    if(data.tags&&data.tags.length){
+      html+=`<div class="case-tags">${data.tags.map(t=>`<span>${t}</span>`).join("")}</div>`;
+    }
+    if(data.details&&data.details.length){
+      html+=`<h2 class="case-h2">Full job description</h2><ul class="case-list">${data.details.map(t=>`<li>${t}</li>`).join("")}</ul>`;
+    }
+    caseBody.innerHTML=html;
+  }
+
+  document.querySelectorAll(".work-card").forEach(card=>{
+    card.addEventListener("click",e=>{
+      e.preventDefault();
+      renderCase(card.dataset.case);
+      location.hash="#case";
+    });
+  });
+
+  function showRoute(){
+    const name=(location.hash||"#about").slice(1);
+    const route=views.some(view=>view.dataset.view===name)?name:"about";
+    views.forEach(view=>view.classList.toggle("active",view.dataset.view===route));
+    const navRoute=route==="case"?"work":route;
+    links.forEach(link=>{
+      const active=link.dataset.route===navRoute;
+      link.classList.toggle("active",active);
+      link.setAttribute("aria-current",active?"page":"false");
+    });
+    window.scrollTo({top:0,behavior:"instant"});
+
+    // Show the floating chat button only on the Contact page.
+    document.body.classList.toggle("route-contact",route==="contact");
+
+    // Leaving the Contact page closes the chatbot so it doesn't linger elsewhere.
+    if(route!=="contact" && document.body.classList.contains("chatbot-open")) closeChatbot();
+
+    // When the About page is hidden, the SVG has no size. Recalculate only
+    // after it becomes visible again so the cursor-following eyes never break.
+    if(route==="about"){
+      requestAnimationFrame(()=>{
+        const gaze=lastPointer.active?gazeFromPoint(lastPointer.x,lastPointer.y):{x:0,y:0};
+        target=gaze||{x:0,y:0};
+        if(!Number.isFinite(current.x)||!Number.isFinite(current.y)){
+          current={x:0,y:0};
+        }
+      });
+    }else{
+      target={x:0,y:0};
+    }
+  }
+
+  function setScrolledNav(){
+    nav.classList.toggle("scrolled",window.scrollY>16);
+  }
+
+  window.addEventListener("hashchange",showRoute);
+  window.addEventListener("scroll",setScrolledNav,{passive:true});
+  showRoute();
+  setScrolledNav();
+
+  const svg=document.getElementById("eyesSvg");
+  const pupilL=document.getElementById("pupilL");
+  const pupilR=document.getElementById("pupilR");
+  const lidL=document.getElementById("lidL");
+  const lidR=document.getElementById("lidR");
+  const browL=document.getElementById("browL");
+  const browR=document.getElementById("browR");
+  const mouth=document.getElementById("mouth");
+  const eyesGroup=document.getElementById("eyesGroup");
+  let target={x:0,y:0}, current={x:0,y:0};
+  let lastPointer={x:innerWidth/2,y:innerHeight/2,active:false};
+  let blink=0, phase="idle", phaseT=0, nextBlink=2+Math.random()*2.8;
+  let hop=0, hopVel=0, nextHop=2.8+Math.random()*2.2;
+  let last=performance.now();
+
+  function gazeFromPoint(x,y){
+    const r=svg.getBoundingClientRect();
+
+    // If the Work section is currently display:none, r.width/r.height becomes 0.
+    // Returning null here prevents NaN transforms, which is what made the eyes
+    // stop moving after visiting About/Projects/Play and coming back.
+    if(r.width<10||r.height<10){
+      return null;
+    }
+
+    const cx=r.left+r.width/2, cy=r.top+r.height/2;
+    let dx=(x-cx)/(r.width*.52), dy=(y-cy)/(r.height*.58);
+    const len=Math.hypot(dx,dy)||1;
+    if(len>1){dx/=len;dy/=len}
+
+    if(!Number.isFinite(dx)||!Number.isFinite(dy)){
+      return {x:0,y:0};
+    }
+    return {x:dx,y:dy};
+  }
+
+  function updateTargetFromPointer(event){
+    lastPointer={x:event.clientX,y:event.clientY,active:true};
+    const gaze=gazeFromPoint(event.clientX,event.clientY);
+    if(gaze){
+      target=gaze;
+    }
+  }
+
+  window.addEventListener("pointermove",updateTargetFromPointer,{passive:true});
+  window.addEventListener("mousemove",updateTargetFromPointer,{passive:true});
+  window.addEventListener("mouseleave",()=>{
+    target={x:0,y:0};
+    lastPointer.active=false;
+  });
+
+  function tick(now){
+    const dt=Math.min((now-last)/1000,.05);
+    last=now;
+
+    if(!Number.isFinite(target.x)||!Number.isFinite(target.y)||!Number.isFinite(current.x)||!Number.isFinite(current.y)){
+      target={x:0,y:0};
+      current={x:0,y:0};
+    }
+
+    current.x+=(target.x-current.x)*.16;
+    current.y+=(target.y-current.y)*.16;
+    const ox=current.x*18, oy=current.y*18;
+    pupilL.setAttribute("transform",`translate(${ox},${oy})`);
+    pupilR.setAttribute("transform",`translate(${ox},${oy})`);
+
+    if(phase==="idle"){
+      nextBlink-=dt;
+      if(nextBlink<=0){phase="close";phaseT=0}
+    }else if(phase==="close"){
+      phaseT+=dt/.07;
+      blink=Math.min(phaseT,1);
+      if(blink>=1){phase="open";phaseT=0}
+    }else{
+      phaseT+=dt/.11;
+      blink=Math.max(1-phaseT,0);
+      if(blink<=0){phase="idle";nextBlink=2+Math.random()*3}
+    }
+    const lidY=-132+blink*132;
+    lidL.setAttribute("transform",`translate(0,${lidY})`);
+    lidR.setAttribute("transform",`translate(0,${lidY})`);
+
+    nextHop-=dt;
+    if(nextHop<=0){hopVel=2.1;nextHop=2.8+Math.random()*3}
+    hop+=hopVel;
+    hopVel-=14*dt;
+    if(hop<0){hop=0;hopVel=0}
+    eyesGroup.setAttribute("transform",`translate(0,${-hop}) scale(1,${1+Math.min(hop*.018,.1)})`);
+
+    browL.setAttribute("transform",`translate(${ox*.35},${oy*.3})`);
+    browR.setAttribute("transform",`translate(${ox*.35},${oy*.3})`);
+    mouth.setAttribute("d",`M${132+ox*.25} ${156+oy*.18} Q${150+ox*.25} ${164+oy*.2} ${168+ox*.25} ${156+oy*.18}`);
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+
+
+  // Simple resume chatbot: no API, no backend. Opens from the Contact nav item.
+  const chatbotNav=document.getElementById("chatbotNav");
+  const chatbot=document.getElementById("resumeChatbot");
+  const chatbotOverlay=document.getElementById("chatbotOverlay");
+  const chatbotClose=document.getElementById("chatbotClose");
+  const chatbotMessages=document.getElementById("chatbotMessages");
+  const chatbotForm=document.getElementById("chatbotForm");
+  const chatbotInput=document.getElementById("chatbotInput");
+  const chatbotSend=chatbotForm.querySelector(".chatbot-send");
+
+  const BOT_QUICK_QUESTIONS=[
+    "Just saying hello!",
+    "Why should we hire you",
+    "I need to contact you",
+    "review my game"
+  ];
+
+  const BOT_ANSWERS={
+    hello:[
+      "Hello! Thanks for saying hi 😁",
+      "I hope you've enjoyed browsing my work",
+      "Can I help you with anything else?"
+    ],
+    hire:[
+      "Rijul has a proven track record of being an academic achiever while also building projects that show his diverse technical skills. He has combined strong Computer Science foundations with hands-on IT support experience, so he can understand both the user problem and the technical system behind it. He is reliable, clear with communication, quick to learn, and comfortable working across support, software, data checks, documentation, and troubleshooting."
+    ],
+    contact:[
+      "You can contact Rijul here:\n\nrijulsobti575@gmail.com"
+    ],
+    reviewStart:[
+      "Sure — write your review below and press Enter."
+    ],
+    reviewThanks:[
+      "Thanks for your review."
+    ]
+  };
+
+  let waitingForReview=false;
+
+  function removeQuickQuestions(){
+    chatbotMessages.querySelectorAll(".chat-quick-wrap").forEach(wrap=>wrap.remove());
+  }
+
+  function setReviewMode(active){
+    waitingForReview=active;
+    chatbotForm.classList.toggle("waiting-review",active);
+    chatbotInput.disabled=false;
+    chatbotSend.disabled=false;
+    chatbotInput.placeholder=active?"Write your review and press Enter...":"Ask me a question…";
+    if(active){
+      setTimeout(()=>chatbotInput.focus(),80);
+    }else{
+      chatbotInput.value="";
+    }
+  }
+
+  function addChatMessage(text,sender="bot"){
+    const row=document.createElement("div");
+    row.className=`chat-row ${sender}`;
+    const bubble=document.createElement("div");
+    bubble.className="chat-bubble";
+    bubble.textContent=text;
+    row.appendChild(bubble);
+    chatbotMessages.appendChild(row);
+    chatbotMessages.scrollTop=chatbotMessages.scrollHeight;
+  }
+
+  function addQuickQuestions(){
+    removeQuickQuestions();
+    const wrap=document.createElement("div");
+    wrap.className="chat-quick-wrap";
+    BOT_QUICK_QUESTIONS.forEach(question=>{
+      const btn=document.createElement("button");
+      btn.type="button";
+      btn.className="chat-quick";
+      btn.textContent=question;
+      btn.addEventListener("click",()=>sendChat(question));
+      wrap.appendChild(btn);
+    });
+    chatbotMessages.appendChild(wrap);
+    chatbotMessages.scrollTop=chatbotMessages.scrollHeight;
+  }
+
+  function bootChat(){
+    if(chatbotMessages.dataset.booted) return;
+    chatbotMessages.dataset.booted="true";
+    addChatMessage("Hello! I'm Rijul Bot 😄");
+    addChatMessage("Pick one of the options below.");
+    setReviewMode(false);
+    addQuickQuestions();
+  }
+
+  function setChatNavActive(active){
+    if(!chatbotNav) return;
+    chatbotNav.setAttribute("aria-expanded",active?"true":"false");
+    const currentRoute=(location.hash||"#about").slice(1);
+    const restoredRoute=currentRoute==="case"?"work":currentRoute;
+    links.forEach(link=>{
+      const shouldBeActive=active?link===chatbotNav:link.dataset.route===restoredRoute;
+      link.classList.toggle("active",shouldBeActive);
+      link.setAttribute("aria-current",shouldBeActive?"page":"false");
+    });
+  }
+
+  function openChatbot(){
+    bootChat();
+    document.body.classList.add("chatbot-open");
+    chatbot.setAttribute("aria-hidden","false");
+    chatbotOverlay.setAttribute("aria-hidden","false");
+    setChatNavActive(true);
+  }
+
+  function closeChatbot(){
+    document.body.classList.remove("chatbot-open");
+    chatbot.setAttribute("aria-hidden","true");
+    chatbotOverlay.setAttribute("aria-hidden","true");
+    setChatNavActive(false);
+  }
+
+  function showBotAnswers(messages,callback){
+    let delay=180;
+    messages.forEach(message=>{
+      setTimeout(()=>addChatMessage(message,"bot"),delay);
+      delay+=220;
+    });
+    setTimeout(()=>{
+      if(callback) callback();
+      addQuickQuestions();
+    },delay+40);
+  }
+
+  // Read Django's CSRF token for the POST to /api/chat/
+  function getCsrfToken(){
+    const meta=document.querySelector('meta[name="csrf-token"]');
+    return meta?meta.getAttribute("content"):"";
+  }
+
+  // Ask the live Gemini-backed endpoint. Falls back gracefully on any error.
+  async function askBackend(message){
+    removeQuickQuestions();
+    addChatMessage("…","bot");
+    const thinking=chatbotMessages.querySelector(".chat-row.bot:last-child");
+    try{
+      const res=await fetch("/api/chat/",{
+        method:"POST",
+        headers:{
+          "Content-Type":"application/json",
+          "X-CSRFToken":getCsrfToken()
+        },
+        body:JSON.stringify({message})
+      });
+      const data=await res.json();
+      if(thinking) thinking.remove();
+      addChatMessage(data.reply||"Sorry, I couldn't answer that right now.","bot");
+    }catch(err){
+      if(thinking) thinking.remove();
+      addChatMessage("The assistant is offline right now. You can reach Rijul at rijulsobti575@gmail.com.","bot");
+    }
+    addQuickQuestions();
+  }
+
+  function sendChat(text){
+    const clean=(text||"").trim();
+    if(!clean) return;
+
+    removeQuickQuestions();
+    if(waitingForReview && !BOT_QUICK_QUESTIONS.includes(clean)){
+      addChatMessage(clean,"user");
+      setReviewMode(false);
+      showBotAnswers(BOT_ANSWERS.reviewThanks);
+      return;
+    }
+
+    setReviewMode(false);
+    addChatMessage(clean,"user");
+
+    if(clean==="Just saying hello!"){
+      showBotAnswers(BOT_ANSWERS.hello);
+      return;
+    }
+    if(clean==="Why should we hire you"){
+      showBotAnswers(BOT_ANSWERS.hire);
+      return;
+    }
+    if(clean==="I need to contact you"){
+      showBotAnswers(BOT_ANSWERS.contact);
+      return;
+    }
+    if(clean==="review my game"){
+      showBotAnswers(BOT_ANSWERS.reviewStart,()=>setReviewMode(true));
+      return;
+    }
+
+    // Anything the visitor free-types goes to the live AI assistant.
+    askBackend(clean);
+  }
+
+  if(chatbotNav){
+    chatbotNav.addEventListener("click",e=>{
+      e.preventDefault();
+      // Show the Contact page AND the chatbot together.
+      if(location.hash!=="#contact"){ location.hash="#contact"; } else { showRoute(); }
+      openChatbot();
+    });
+  }
+  const chatbotFab=document.getElementById("chatbotFab");
+  if(chatbotFab){
+    chatbotFab.addEventListener("click",openChatbot);
+  }
+  chatbotClose.addEventListener("click",closeChatbot);
+  chatbotOverlay.addEventListener("click",closeChatbot);
+  window.addEventListener("keydown",e=>{
+    if(e.key==="Escape" && document.body.classList.contains("chatbot-open")) closeChatbot();
+  });
+  chatbotForm.addEventListener("submit",e=>{
+    e.preventDefault();
+    const text=chatbotInput.value;
+    chatbotInput.value="";
+    sendChat(text);
+  });
+
+
+</script>
+</body>
+</html>

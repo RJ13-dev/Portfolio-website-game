@@ -1,0 +1,63 @@
+{% load static %}<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="csrf-token" content="{{ csrf_token }}"/>
+<title>Stimulus — a letter is waiting for you</title>
+<style>
+  html,body{height:100%;margin:0;font-family:Georgia,serif;background:#1c1208;color:#e7cfa3;
+    display:flex;align-items:center;justify-content:center;text-align:center}
+  .shell{max-width:560px;padding:40px}
+  h1{letter-spacing:8px;color:#f0d590;font-size:48px;margin:0 0 12px}
+  p{color:#d8b888;line-height:1.7}
+  a{color:#c4884e}
+</style>
+</head>
+<body>
+  <div class="shell">
+    <h1>STIMULUS</h1>
+    <p>The game will live here. Once we develop it together with the site,
+       the full Stimulus engine drops into this template and connects to the
+       game-progress API at <code>/api/games/</code>.</p>
+    <p><a href="{% url 'portfolio' %}">← Back to the portfolio</a></p>
+  </div>
+
+  <script>
+    // Ready-made API helper for when the game is wired up.
+    // Persists progress to the backend you've already built.
+    window.StimulusAPI = {
+      token: null,
+      async login(username, password){
+        const r = await fetch("/api/auth/login/", {
+          method:"POST", headers:{"Content-Type":"application/json"},
+          body:JSON.stringify({username, password})
+        });
+        const d = await r.json();
+        this.token = d.access;
+        return d;
+      },
+      headers(){
+        return this.token
+          ? {"Content-Type":"application/json","Authorization":"Bearer "+this.token}
+          : {"Content-Type":"application/json"};
+      },
+      startSession(){
+        return fetch("/api/games/sessions/", {method:"POST", headers:this.headers(), body:"{}"})
+          .then(r=>r.json());
+      },
+      recordAttempt(payload){
+        return fetch("/api/games/attempts/", {method:"POST", headers:this.headers(),
+          body:JSON.stringify(payload)}).then(r=>r.json());
+      },
+      finishSession(id, coins){
+        return fetch(`/api/games/sessions/${id}/finish/`, {method:"POST",
+          headers:this.headers(), body:JSON.stringify({coins_earned:coins})}).then(r=>r.json());
+      },
+      leaderboard(){
+        return fetch("/api/games/leaderboard/").then(r=>r.json());
+      }
+    };
+  </script>
+</body>
+</html>

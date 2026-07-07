@@ -1,0 +1,66 @@
+# ============================================================
+#  DEVELOPMENT compose — DEBUG=True, live-mounted code, no nginx.
+#  Static files are served straight from ./static by Django's dev
+#  server, so edits to templates / static / TS show on a refresh.
+#
+#  Run it with:
+#      docker-compose -f docker-compose.dev.yml up --build
+#  Then open  http://localhost:8000
+#
+#  (The regular docker-compose.yml stays as your production-like
+#   stack: gunicorn + nginx + DEBUG=False.)
+# ============================================================
+services:
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: portfolio
+      POSTGRES_USER: portfolio
+      POSTGRES_PASSWORD: portfolio
+    volumes:
+      - pgdata_dev:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U portfolio"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  web:
+    build: .
+    # runserver auto-reloads when the mounted source changes.
+    command: >
+      sh -c "python manage.py migrate &&
+             python manage.py runserver 0.0.0.0:8000"
+    environment:
+      DEBUG: "True"
+      SECRET_KEY: "dev-secret-change-me"
+      ALLOWED_HOSTS: "localhost,127.0.0.1,0.0.0.0"
+      DATABASE_URL: "postgres://portfolio:portfolio@db:5432/portfolio"
+      REDIS_URL: "redis://redis:6379/0"
+      GEMINI_API_KEY: "${GEMINI_API_KEY:-}"
+      GEMINI_MODEL: "${GEMINI_MODEL:-gemini-2.5-flash}"
+    volumes:
+      # Live-mount the whole project so code edits are picked up without a
+      # rebuild. An anonymous volume keeps the host's virtualenv folders from
+      # shadowing anything inside the container.
+      - .:/app
+      - /app/.venv
+      - /app/.venv-1
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+volumes:
+  pgdata_dev:
