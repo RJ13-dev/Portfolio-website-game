@@ -1348,10 +1348,35 @@
   @media(min-width:1080px){body.chatbot-open #contact .page{transform:translateX(-150px)}}
   @media(max-width:620px){.contact-methods{grid-template-columns:1fr}}
 
-  /* ---- Very small phones: keep the nav + hero from cramping/overflowing ---- */
+  /* ---- Phones: fix nav overflow, hero spacing, tag alignment ---- */
+  @media(max-width:600px){
+    /* Let the pill nav wrap to two rows so EVERY item (incl. Contact) is
+       visible instead of the last one running off-screen. */
+    .top-nav{
+      flex-wrap:wrap; justify-content:center; overflow:visible;
+      top:12px; gap:3px 4px; padding:7px 10px;
+      max-width:calc(100vw - 16px); font-size:13px;
+    }
+    .top-nav a{padding:8px 12px}
+    .top-nav a.active:after{display:none}
+    /* Push page content down so the taller (wrapped) nav never overlaps it. */
+    .route{padding-top:clamp(132px,22vh,182px)}
+
+    /* Space the stacked name / eyes / "developer" so the eyes don't touch
+       the name, and keep everything centred. */
+    .hero-title{gap:clamp(30px,8vw,50px)}
+    .eyes-inline{width:min(46vw,180px);margin:0 auto}
+    .hero-copy span{white-space:normal}
+    .subtitle{padding:0 8px}
+
+    /* Work tags: one per line in a clean vertical column instead of a
+       staggered wrap. */
+    .work-hero-tags{flex-direction:column;align-items:flex-start;gap:10px}
+  }
+
   @media(max-width:430px){
-    .top-nav{font-size:12.5px;gap:2px;padding:6px}
-    .top-nav a{padding:8px 9px}
+    .top-nav{font-size:12px;gap:2px 3px;padding:6px 8px}
+    .top-nav a{padding:7px 10px}
     .hero-title{font-size:clamp(2.5rem,13vw,3.4rem)}
     .about-intro-card{padding:20px}
     .resume-chatbot{top:72px;height:calc(100dvh - 92px)}

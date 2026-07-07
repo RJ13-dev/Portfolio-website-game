@@ -835,6 +835,16 @@
     .shop-grid { grid-template-columns: repeat(auto-fill, minmax(118px, 1fr)); gap: 12px; padding: 10px 14px 18px; }
     .shop-item .emoji { width: 64px; height: 64px; font-size: 30px; }
     .shop-head h2 { font-size: 20px; }
+
+    /* The lobby art contains the sign ("get letters / earn coins / help me
+       shop") — important text baked into the image. On a tall phone, "cover"
+       crops it off, so show the whole image instead and fill the letterbox
+       with the warm wood tone. */
+    #lobby .room-bg.has-image {
+      background-size: contain;
+      background-position: center 40%;
+      background-color: #241708;
+    }
   }
 
   /* ---- Landscape phones (wide but short) ---- */
