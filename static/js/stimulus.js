@@ -406,14 +406,6 @@
       screen.appendChild(roomBg(ASSETS.lobby));
       screen.appendChild(coinBadge(this.coins));
       const auth = window.StimulusAuth;
-      // Signed-in players get a profile chip and a save button.
-      if (auth && auth.loggedIn()) {
-        const chip = auth.userChip(() => {
-          auth.logout();
-          this.showStart();
-        });
-        if (chip) screen.appendChild(chip);
-      }
       const shopBtn = el("button", {
         class: "wood-btn plaque",
         on: {
@@ -515,9 +507,6 @@
           class: "w-count",
           text: String(this.roomItems.length)
         }));
-        wardrobe.classList.add("open");
-        fab.classList.add("active");
-        fab.setAttribute("aria-expanded", "true");
       }
       wardrobeZone.appendChild(fab);
       wardrobeZone.appendChild(wardrobe);
@@ -528,53 +517,73 @@
         class: "lobby-buttons"
       }, shopBtn, letterBtn));
 
-      // Save-progress control (only meaningful when signed in).
-      if (auth && auth.loggedIn()) {
-        const saveRow = el("div", {
-          class: "lobby-save-prompt"
-        }, el("button", {
-          class: "exit-mini",
-          text: "Save progress",
-          on: {
-            click: () => this.saveProgress(screen)
+      // ---- Pause / options menu (opened from the button under the coins) ----
+      const closeMenu = () => overlay.classList.remove("open");
+      const carryGuestAndSave = () => {
+        const guestState = {
+          coins: this.coins,
+          roomItems: this.roomItems.slice(),
+          unused: this.unused.slice(),
+          currentIndex: this.currentIndex
+        };
+        auth.openSignUp(created => {
+          auth.Auth.isGuest = false;
+          if (created) {
+            this.coins = guestState.coins;
+            this.roomItems = guestState.roomItems.slice();
+            this.unused = guestState.unused.slice();
+            this.currentIndex = guestState.currentIndex;
+            this.saveProgress().then(() => this.showLobby());
+          } else {
+            this.beginStory(false);
           }
-        }));
-        screen.appendChild(saveRow);
-      } else if (auth) {
-        // Nudge guests to make a profile so their progress can persist.
-        const nudge = el("div", {
-          class: "lobby-save-prompt"
-        }, el("button", {
-          class: "exit-mini",
-          text: "Sign in to save progress",
-          on: {
-            click: () => {
-              const guestState = {
-                coins: this.coins,
-                roomItems: this.roomItems.slice(),
-                unused: this.unused.slice(),
-                currentIndex: this.currentIndex
-              };
-              auth.openSignUp(created => {
-                auth.Auth.isGuest = false;
-                // A brand-new profile starts empty, so carry the guest's current
-                // progress into it. Signing in to an EXISTING account instead loads
-                // that account's saved progress (never overwrite it with guest data).
-                if (created) {
-                  this.coins = guestState.coins;
-                  this.roomItems = guestState.roomItems.slice();
-                  this.unused = guestState.unused.slice();
-                  this.currentIndex = guestState.currentIndex;
-                  this.saveProgress().then(() => this.showLobby());
-                } else {
-                  this.beginStory(false);
-                }
-              });
-            }
-          }
-        }));
-        screen.appendChild(nudge);
-      }
+        });
+      };
+      const opt = (label, fn) => el("button", {
+        class: "pause-opt",
+        text: label,
+        on: { click: fn }
+      });
+      const overlay = el("div", {
+        class: "pause-overlay"
+      }, el("div", {
+        class: "pause-flourish",
+        html: "&#10070;",
+        attrs: { "aria-hidden": "true" }
+      }), el("div", {
+        class: "pause-rule",
+        attrs: { "aria-hidden": "true" }
+      }), el("div", {
+        class: "pause-menu"
+      }, opt("Continue", closeMenu), opt("Save Progress", () => {
+        if (auth && auth.loggedIn()) {
+          this.saveProgress(screen);
+          closeMenu();
+        } else if (auth) {
+          carryGuestAndSave();
+        } else {
+          closeMenu();
+        }
+      }), opt("New Game", () => {
+        this.coins = 200;
+        this.roomItems = [];
+        this.resetPool();
+        this.showStart();
+      }), opt("Quit to Menu", () => {
+        this.showStart();
+      })));
+      overlay.addEventListener("click", e => {
+        if (e.target === overlay) closeMenu();
+      });
+      const menuIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16"/><path d="M4 12h16"/><path d="M4 17h16"/></svg>';
+      const menuFab = el("button", {
+        class: "lobby-menu-fab",
+        html: menuIcon,
+        attrs: { title: "Menu", "aria-label": "Menu" },
+        on: { click: () => overlay.classList.add("open") }
+      });
+      screen.appendChild(menuFab);
+      screen.appendChild(overlay);
       this.mount(screen);
     },
     // ===================== LETTER SCREEN =====================

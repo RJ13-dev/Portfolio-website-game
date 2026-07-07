@@ -329,20 +329,19 @@
   .puzzle-card .body { font-family: Calibri, 'Segoe UI', sans-serif; font-size: 24px; line-height: 1.5; flex: 1; display: flex; align-items: center; }
   .puzzle-card .wood-btn { margin-top: 18px; }
 
-  /* ---- Wardrobe: carved cabinet drawer on the left ---- */
+  /* ---- Wardrobe: round button top-right, drawer drops beneath it ---- */
   .wardrobe-zone {
     position: absolute;
-    left: clamp(18px, 2.2vw, 34px);
-    top: 50%;
-    width: min(286px, calc(100vw - 40px));
-    height: min(510px, 68vh);
-    transform: translateY(-45%);
+    right: 24px; left: auto;
+    top: 142px;
+    width: min(232px, calc(100vw - 40px));
+    height: auto;
     z-index: 24;
     pointer-events: none;
   }
   .wardrobe-fab {
-    position: absolute; left: 24px; top: 0;
-    z-index: 28; width: 72px; height: 72px; border-radius: 50%;
+    position: absolute; right: 0; left: auto; top: 0;
+    z-index: 28; width: 56px; height: 56px; border-radius: 50%;
     display: grid; place-items: center; cursor: pointer;
     color: var(--cream);
     border: 2px solid rgba(214,168,112,0.5);
@@ -363,7 +362,7 @@
     filter: brightness(1.12);
     box-shadow: 0 2px 0 #3b210f, 0 6px 14px rgba(0,0,0,0.48), inset 0 2px 0 rgba(255,225,160,0.28);
   }
-  .wardrobe-fab svg { width: 36px; height: 36px; display: block; }
+  .wardrobe-fab svg { width: 28px; height: 28px; display: block; }
   .wardrobe-fab .w-count {
     position: absolute; top: -8px; right: -8px;
     min-width: 28px; height: 28px; padding: 0 7px; border-radius: 999px;
@@ -373,15 +372,14 @@
   }
 
   .wardrobe-panel {
-    position: absolute; top: 84px; left: 0;
+    position: absolute; top: 66px; right: 0; left: auto;
     z-index: 25;
-    width: 100%;
-    max-height: calc(100% - 88px);
+    width: min(232px, calc(100vw - 40px));
+    max-height: min(340px, 52vh);
     overflow: hidden;
-    padding: 48px 14px 46px;
-    border-radius: 10px 10px 4px 4px;
+    padding: 20px 14px 22px;
+    border-radius: 14px;
     background:
-      linear-gradient(90deg, rgba(255,220,150,0.08), transparent 18%, transparent 82%, rgba(0,0,0,0.2)),
       linear-gradient(180deg, rgba(104,62,28,0.98), rgba(54,30,13,0.98) 42%, rgba(35,19,9,0.99));
     border: 2px solid rgba(120,72,31,0.9);
     border-top-color: rgba(223,154,76,0.8);
@@ -390,11 +388,71 @@
       inset 0 2px 0 rgba(255,219,147,0.22),
       inset 0 -18px 28px rgba(0,0,0,0.32);
     opacity: 0; pointer-events: none;
-    transform: translateX(-18px) scaleX(0.96);
-    transform-origin: left center;
-    transition: transform 0.32s cubic-bezier(.2,.8,.2,1), opacity 0.28s ease;
+    transform: translateY(-14px) scaleY(0.95);
+    transform-origin: top right;
+    transition: transform 0.3s cubic-bezier(.2,.8,.2,1), opacity 0.28s ease;
   }
-  .wardrobe-panel.open { transform: translateX(0) scaleX(1); opacity: 1; pointer-events: auto; }
+  .wardrobe-panel.open { transform: translateY(0) scaleY(1); opacity: 1; pointer-events: auto; }
+  .wardrobe-panel::after { display: none; }
+
+  /* ---- Menu (pause) button, sits under the coin badge ---- */
+  .lobby-menu-fab {
+    position: absolute; top: 78px; right: 24px; z-index: 28;
+    width: 56px; height: 56px; border-radius: 50%;
+    display: grid; place-items: center; cursor: pointer; color: var(--cream);
+    border: 2px solid rgba(214,168,112,0.5);
+    background:
+      radial-gradient(circle at 42% 30%, rgba(214,168,112,0.3), transparent 32%),
+      linear-gradient(180deg, #a36b38, #74451f 58%, #4a2a13);
+    box-shadow:
+      0 5px 0 #3b210f, 0 12px 24px rgba(0,0,0,0.52),
+      inset 0 2px 0 rgba(255,225,160,0.28), inset 0 -10px 18px rgba(39,19,7,0.36);
+    transition: transform 0.08s ease, filter 0.15s ease;
+  }
+  .lobby-menu-fab:hover { filter: brightness(1.08); }
+  .lobby-menu-fab:active { transform: translateY(3px) scale(0.97); }
+  .lobby-menu-fab svg { width: 28px; height: 28px; display: block; }
+
+  /* ---- Pause / options overlay (takes over the screen) ---- */
+  .pause-overlay {
+    position: absolute; inset: 0; z-index: 60;
+    display: none; flex-direction: column; align-items: center; justify-content: center;
+    background: radial-gradient(120% 82% at 50% 34%, rgba(58,40,23,0.95), rgba(14,8,3,0.975));
+    -webkit-backdrop-filter: blur(2px); backdrop-filter: blur(2px);
+  }
+  .pause-overlay.open { display: flex; animation: pauseIn 0.4s ease both; }
+  @keyframes pauseIn { from { opacity: 0; } to { opacity: 1; } }
+  .pause-flourish {
+    color: var(--accent); font-size: 34px; letter-spacing: 6px; line-height: 1;
+    text-shadow: 0 0 26px rgba(196,136,78,0.55);
+    opacity: 0; animation: pauseUp 0.5s ease 0.05s both;
+  }
+  .pause-rule {
+    width: 210px; height: 1px; margin: 12px 0 24px;
+    background: linear-gradient(90deg, transparent, rgba(196,136,78,0.75), transparent);
+    opacity: 0; animation: pauseUp 0.5s ease 0.12s both;
+  }
+  .pause-menu { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+  .pause-opt {
+    font-family: Georgia, 'Times New Roman', serif; font-variant: small-caps;
+    letter-spacing: 3px; font-size: 27px; color: var(--paper);
+    background: none; border: none; cursor: pointer; padding: 12px 44px;
+    position: relative; opacity: 0;
+    transition: color 0.2s ease, transform 0.2s ease, text-shadow 0.2s ease;
+    animation: pauseUp 0.5s ease both;
+  }
+  .pause-menu .pause-opt:nth-child(1) { animation-delay: 0.16s; }
+  .pause-menu .pause-opt:nth-child(2) { animation-delay: 0.22s; }
+  .pause-menu .pause-opt:nth-child(3) { animation-delay: 0.28s; }
+  .pause-menu .pause-opt:nth-child(4) { animation-delay: 0.34s; }
+  .pause-opt:hover { color: var(--gold-1); transform: scale(1.05); text-shadow: 0 0 20px rgba(255,198,110,0.5); }
+  .pause-opt::before, .pause-opt::after {
+    content: "\2756"; position: absolute; top: 50%; transform: translateY(-50%);
+    font-size: 13px; color: var(--accent); opacity: 0; transition: opacity 0.2s ease;
+  }
+  .pause-opt::before { left: 10px; } .pause-opt::after { right: 10px; }
+  .pause-opt:hover::before, .pause-opt:hover::after { opacity: 0.95; }
+  @keyframes pauseUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
   .wardrobe-panel::before {
     content: "";
     position: absolute; inset: 22px 8px 18px;
@@ -847,10 +905,13 @@
     .shop-item .emoji { width: 64px; height: 64px; font-size: 30px; }
     .shop-head h2 { font-size: 20px; }
 
-    /* Crop from the exact centre of the lobby art on mobile. */
+    /* Shift the crop slightly so the sign stays fully in frame without
+       cutting the girl. */
     #lobby .room-bg.has-image {
-      background-position: center center;
+      background-position: 40% center;
     }
+    .pause-opt { font-size: 23px; padding: 11px 36px; letter-spacing: 2px; }
+    .pause-flourish { font-size: 30px; }
   }
 
   /* ---- Landscape phones (wide but short) ---- */
@@ -1771,7 +1832,7 @@
   Game.start();
 })();
 {% endcomment %}
-<script src="{% static 'js/stimulus.js' %}?v=20260707-compiled"></script>
+<script src="{% static 'js/stimulus.js' %}?v=20260708-menu"></script>
 
 <!-- Game logic is authored in static/ts/ and loaded above from compiled static/js/. -->
 </body>
