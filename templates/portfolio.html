@@ -1348,12 +1348,16 @@
   @media(min-width:1080px){body.chatbot-open #contact .page{transform:translateX(-150px)}}
   @media(max-width:620px){.contact-methods{grid-template-columns:1fr}}
 
-  /* ---- Hamburger menu button (hidden on desktop, shown on phones) ---- */
+  /* ---- Hamburger button (hidden on desktop, shown top-right on phones) ---- */
   .nav-toggle{
     display:none;
+    position:fixed; top:14px; right:14px; z-index:210;
     align-items:center; justify-content:center;
-    width:38px; height:38px; padding:0;
-    background:transparent; border:none; color:inherit; cursor:pointer;
+    width:46px; height:46px; padding:0; border-radius:999px; cursor:pointer;
+    color:rgba(216,240,231,.95);
+    background:linear-gradient(180deg,rgba(58,86,70,.95),rgba(38,62,52,.98));
+    border:1px solid rgba(154,196,176,.22);
+    box-shadow:0 10px 26px rgba(7,30,24,.45),inset 0 1px 0 rgba(196,224,210,.14);
   }
   .nav-toggle-bars, .nav-toggle-bars::before, .nav-toggle-bars::after{
     content:""; display:block; width:20px; height:2.5px;
@@ -1362,41 +1366,57 @@
   .nav-toggle-bars{position:relative}
   .nav-toggle-bars::before{position:absolute; left:0; top:-6px}
   .nav-toggle-bars::after{position:absolute; left:0; top:6px}
-  /* Turn the bars into an X when the menu is open */
-  .top-nav.open .nav-toggle-bars{background:transparent}
-  .top-nav.open .nav-toggle-bars::before{transform:translateY(6px) rotate(45deg)}
-  .top-nav.open .nav-toggle-bars::after{transform:translateY(-6px) rotate(-45deg)}
+  /* Turn the bars into an X while the drawer is open */
+  body.nav-open .nav-toggle-bars{background:transparent}
+  body.nav-open .nav-toggle-bars::before{transform:translateY(6px) rotate(45deg)}
+  body.nav-open .nav-toggle-bars::after{transform:translateY(-6px) rotate(-45deg)}
 
-  /* ---- Phones: collapse nav into a dropdown menu; fix hero spacing/tags ---- */
+  /* ---- Phones: nav becomes a right-side slide-in drawer ---- */
   @media(max-width:600px){
-    /* Nav becomes just the hamburger; tapping it drops the links down as a
-       centred vertical list. No more items running off-screen. */
-    .top-nav{
-      flex-direction:column; align-items:center;
-      top:14px; gap:2px; padding:6px; width:auto;
-      max-width:calc(100vw - 20px); overflow:visible;
-    }
     .nav-toggle{display:flex}
-    .top-nav a{display:none; width:100%; justify-content:center; text-align:center; padding:11px 26px}
-    .top-nav a.active:after{display:none}
-    .top-nav.open{border-radius:22px; padding:8px; gap:3px}
-    .top-nav.open a{display:flex}
 
-    /* Content starts below the (small, closed) nav. */
-    .route{padding-top:clamp(104px,16vh,150px)}
+    /* Dim the page behind the open drawer. */
+    body.nav-open::before{
+      content:""; position:fixed; inset:0; z-index:190;
+      background:rgba(6,20,16,.5); backdrop-filter:blur(1px);
+    }
+
+    .top-nav{
+      position:fixed; top:0; right:0; left:auto; transform:translateX(100%);
+      width:min(80vw,300px); height:100dvh; max-width:none;
+      flex-direction:column; align-items:stretch; justify-content:flex-start;
+      gap:0; padding:78px 0 24px; border-radius:0; z-index:200;
+      background:linear-gradient(180deg,rgba(30,50,42,.99),rgba(18,34,28,.99));
+      border:none; border-left:1px solid rgba(154,196,176,.18);
+      box-shadow:-24px 0 60px rgba(0,0,0,.5);
+      backdrop-filter:none; -webkit-backdrop-filter:none;
+      overflow-y:auto;
+      transition:transform .34s cubic-bezier(.2,.82,.2,1);
+    }
+    .top-nav.open{transform:translateX(0)}
+
+    /* Each link is a full-width row with a chevron, like a native menu. */
+    .top-nav a{
+      display:flex; align-items:center; justify-content:space-between;
+      width:100%; padding:16px 22px; border-radius:0; font-size:16px;
+      border-bottom:1px solid rgba(255,255,255,.07);
+    }
+    .top-nav a::after{content:"\203A"; opacity:.45; font-size:22px; line-height:1; margin:0}
+    .top-nav a.active{font-weight:800}
+    .top-nav a.active::after{content:"\203A"; display:inline; width:auto; height:auto;
+      background:none; border:none; box-shadow:none; margin:0; color:var(--mint-bright); opacity:.8}
+
+    /* Floating hamburger only — content starts near the top. */
+    .route{padding-top:clamp(88px,13vh,128px)}
 
     /* Extra breathing room so the eyes never touch the name. */
     .hero-title{gap:clamp(52px,15vw,78px)}
     .eyes-inline{width:min(44vw,170px);margin:6px auto}
     .hero-copy span{white-space:normal}
     .subtitle{padding:0 8px}
-
-    /* Work tags: one per line in a clean vertical column. */
-    .work-hero-tags{flex-direction:column;align-items:flex-start;gap:10px}
   }
 
   @media(max-width:430px){
-    .top-nav a{padding:10px 22px}
     .hero-title{font-size:clamp(2.5rem,13vw,3.4rem)}
     .about-intro-card{padding:20px}
     .resume-chatbot{top:72px;height:calc(100dvh - 92px)}
@@ -1410,10 +1430,10 @@
 </style>
 </head>
 <body>
-<nav aria-label="Primary" class="top-nav">
-    <button class="nav-toggle" type="button" aria-label="Toggle menu" aria-expanded="false">
-      <span class="nav-toggle-bars" aria-hidden="true"></span>
-    </button>
+<button class="nav-toggle" type="button" aria-label="Toggle menu" aria-expanded="false">
+    <span class="nav-toggle-bars" aria-hidden="true"></span>
+  </button>
+  <nav aria-label="Primary" class="top-nav">
     <a data-route="about" href="#about">About</a>
     <a data-route="work" href="#work">Work</a>
     <a data-route="projects" href="#projects">Projects</a>
@@ -1540,13 +1560,6 @@
         <div class="page">
           <h1>Work.</h1>
           <p class="lead">My experience connects IT support, SaaS troubleshooting, technical research, data analysis, and customer-facing problem solving. Click any card to open the full role description, tools used, and the work I handled.</p>
-          <div class="work-hero-tags" aria-label="Work focus areas">
-            <span>IT Support</span>
-            <span>Healthcare SaaS</span>
-            <span>Technical Research</span>
-            <span>Data Analysis</span>
-            <span>Customer Service</span>
-          </div>
         </div>
       </div>
       <section aria-label="Professional experience cards" class="work-section experience-only-section">
@@ -1884,25 +1897,24 @@
   const links=[...document.querySelectorAll("[data-route]")];
   const views=[...document.querySelectorAll("[data-view]")];
 
-  // Mobile hamburger: tap to open the nav as a dropdown, tap a link to close it.
-  const navToggle=nav && nav.querySelector(".nav-toggle");
+  // Mobile hamburger: tap to slide the drawer in, tap a link/outside to close.
+  const navToggle=document.querySelector(".nav-toggle");
+  function setNav(open){
+    nav.classList.toggle("open",open);
+    document.body.classList.toggle("nav-open",open);
+    if(navToggle) navToggle.setAttribute("aria-expanded",open?"true":"false");
+  }
   if(navToggle){
     navToggle.addEventListener("click",function(e){
       e.stopPropagation();
-      const open=nav.classList.toggle("open");
-      navToggle.setAttribute("aria-expanded",open?"true":"false");
+      setNav(!nav.classList.contains("open"));
     });
     nav.querySelectorAll("a").forEach(function(a){
-      a.addEventListener("click",function(){
-        nav.classList.remove("open");
-        navToggle.setAttribute("aria-expanded","false");
-      });
+      a.addEventListener("click",function(){ setNav(false); });
     });
-    // Close the menu when tapping anywhere outside the nav.
     document.addEventListener("click",function(e){
-      if(nav.classList.contains("open") && !nav.contains(e.target)){
-        nav.classList.remove("open");
-        navToggle.setAttribute("aria-expanded","false");
+      if(nav.classList.contains("open") && !nav.contains(e.target) && !navToggle.contains(e.target)){
+        setNav(false);
       }
     });
   }

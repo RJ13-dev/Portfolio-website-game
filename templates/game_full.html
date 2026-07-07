@@ -836,13 +836,10 @@
     .shop-item .emoji { width: 64px; height: 64px; font-size: 30px; }
     .shop-head h2 { font-size: 20px; }
 
-    /* The lobby art (with the sign) crops badly on tall phones, so swap in the
-       cards-screen backdrop for mobile — it frames cleanly in portrait. */
+    /* Keep the real lobby art on mobile, but bias the crop toward the sign
+       (held left-of-centre) so its text stays in frame in portrait. */
     #lobby .room-bg.has-image {
-      background-image: url("{% static 'assets/cards.png' %}") !important;
-      background-size: cover !important;
-      background-position: center !important;
-      background-color: transparent !important;
+      background-position: 32% center;
     }
   }
 
