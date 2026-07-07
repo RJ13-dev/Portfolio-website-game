@@ -6,6 +6,8 @@
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <meta name="csrf-token" content="{{ csrf_token }}"/>
 <title>Rijul Sobti - Curious Developer</title>
+<link rel="icon" type="image/svg+xml" href="{% static 'favicon.svg' %}"/>
+<link rel="apple-touch-icon" href="{% static 'favicon.svg' %}"/>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;500;600;700&display=swap" rel="stylesheet"/>
@@ -1192,18 +1194,20 @@
   }
 
   @media(max-width:720px){
+    /* Smaller bottom-sheet card instead of a near-fullscreen panel. */
     .resume-chatbot{
-      top:82px;
+      top:auto;
+      bottom:14px;
       right:12px;
       left:12px;
       width:auto;
-      height:calc(100vh - 104px);
+      height:min(68vh,500px);
       border-radius:20px;
     }
-    .chatbot-header{padding:16px}
-    .chatbot-title b{font-size:1.25rem}
-    .chatbot-title span{font-size:.95rem}
-    .chatbot-avatar{width:48px;height:48px}
+    .chatbot-header{padding:14px}
+    .chatbot-title b{font-size:1.15rem}
+    .chatbot-title span{font-size:.9rem}
+    .chatbot-avatar{width:44px;height:44px}
   }
 
   /* ===== Stimulus cabinet — warm lamplit wood console (Play) ===== */
@@ -1419,7 +1423,7 @@
   @media(max-width:430px){
     .hero-title{font-size:clamp(2.5rem,13vw,3.4rem)}
     .about-intro-card{padding:20px}
-    .resume-chatbot{top:72px;height:calc(100dvh - 92px)}
+    .resume-chatbot{bottom:12px;height:min(72vh,470px)}
   }
   /* Use dynamic viewport height on phones so full-height sections aren't cut
      off behind the browser's address bar. */
