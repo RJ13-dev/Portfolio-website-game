@@ -847,10 +847,9 @@
     .shop-item .emoji { width: 64px; height: 64px; font-size: 30px; }
     .shop-head h2 { font-size: 20px; }
 
-    /* Keep the real lobby art on mobile, but bias the crop toward the sign
-       (held left-of-centre) so its text stays in frame in portrait. */
+    /* Crop from the exact centre of the lobby art on mobile. */
     #lobby .room-bg.has-image {
-      background-position: 32% center;
+      background-position: center center;
     }
   }
 
