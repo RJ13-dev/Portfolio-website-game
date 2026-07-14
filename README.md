@@ -1,10 +1,9 @@
 # Rijul Sobti — Portfolio + Stimulus Game Backend
 
-A full-stack Django application that serves the portfolio website and provides
-a backend for saving progress in the Stimulus puzzle game. Built to showcase
-in-demand technologies: Django, Django REST Framework, PostgreSQL, Redis,
-Docker, JWT auth, a Gemini-powered chatbot, and a GitHub Actions CI/CD pipeline
-that deploys to AWS.
+A full-stack Django app that serves my portfolio site and acts as the backend
+for saving progress in my Stimulus puzzle game. It ties together Django, Django
+REST Framework, PostgreSQL, Redis, Docker, JWT auth, a Gemini-powered chatbot,
+GitHub Actions for CI, and Railway for hosting.
 
 ## What's here now
 
@@ -30,7 +29,8 @@ that deploys to AWS.
 | Auth | JWT via `djangorestframework-simplejwt` |
 | AI | Google Gemini (chatbot proxy, key stays server-side) |
 | Containers | Docker + docker-compose (web, db, redis, nginx) |
-| CI/CD | GitHub Actions → AWS Elastic Beanstalk |
+| CI | GitHub Actions (lint + tests + image build) |
+| Hosting | Railway (builds the Dockerfile, auto-deploys on push) |
 | Docs | OpenAPI / Swagger at `/api/docs/` |
 
 ## Project structure
@@ -46,7 +46,7 @@ rijul-portfolio/
 │   ├── ts/          Game in TypeScript (stimulus.ts, stimulus-auth.ts, globals.d.ts)
 │   └── assets/      Game backgrounds + media
 ├── nginx/           Reverse-proxy config
-├── .github/workflows/  CI/CD pipeline
+├── .github/workflows/  CI (lint + tests + image build)
 ├── tsconfig.json
 ├── Dockerfile
 └── docker-compose.yml
@@ -129,16 +129,13 @@ GEMINI_API_KEY=...
 pytest --cov=.
 ```
 
-## Deploying to AWS
+## Deploying to Railway
 
-The CI/CD pipeline deploys to Elastic Beanstalk on every push to `main`. Add
-these GitHub repository secrets:
+Hosting runs on Railway, which builds the `Dockerfile` and redeploys on every
+push to `main` through its GitHub integration. Full step-by-step notes (adding
+Postgres, setting the environment variables, running migrations) live in
+[`DEPLOY_RAILWAY.md`](DEPLOY_RAILWAY.md).
 
-- `AWS_ACCESS_KEY_ID`
-- `AWS_SECRET_ACCESS_KEY`
-
-Set up an Elastic Beanstalk application named `rijul-portfolio` with an
-environment `rijul-portfolio-prod`, plus an RDS PostgreSQL instance and an
-ElastiCache Redis instance, and add the production env vars (`SECRET_KEY`,
-`DATABASE_URL`, `REDIS_URL`, `GEMINI_API_KEY`, `USE_S3=True`, the S3 bucket
-settings) in the environment configuration.
+At a minimum the web service needs `SECRET_KEY`, `DATABASE_URL` (referenced from
+the Postgres service), and `GEMINI_API_KEY`. Redis is optional — without a
+`REDIS_URL` the app falls back to in-memory caching.

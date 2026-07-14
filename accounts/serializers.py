@@ -14,6 +14,19 @@ class RegisterSerializer(serializers.ModelSerializer):
         model = User
         fields = ("username", "password", "display_name")
 
+    def validate_display_name(self, value):
+        # The display name shows up on the public leaderboard, so keep markup
+        # out of it. Belt and braces on top of the client rendering with
+        # textContent.
+        value = value.strip()
+        if not value:
+            raise serializers.ValidationError("Display name can't be blank.")
+        if any(ch in value for ch in "<>&\"'"):
+            raise serializers.ValidationError(
+                "Display name can't contain < > & \" or '."
+            )
+        return value
+
     def create(self, validated_data):
         display_name = validated_data.pop("display_name")
         user = User.objects.create_user(

@@ -15,14 +15,14 @@ class RegisterView(generics.CreateAPIView):
 
     serializer_class = RegisterSerializer
     permission_classes = [permissions.AllowAny]
-    # Cap new-account creation per IP (settings rate "register") to blunt bot
-    # mass-registration.
+    # Cap sign-ups per IP (the "register" rate in settings) so bots can't spam
+    # new accounts.
     throttle_scope = "register"
     throttle_classes = [ScopedRateThrottle]
 
 
 class ThrottledLoginView(TokenObtainPairView):
-    """JWT login with a tight per-IP rate limit to slow credential brute force."""
+    """JWT login with a per-IP rate limit to slow down password guessing."""
 
     throttle_scope = "login"
     throttle_classes = [ScopedRateThrottle]

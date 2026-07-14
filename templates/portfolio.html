@@ -428,6 +428,7 @@
   .work-card.peach{background:linear-gradient(160deg,#f3c0a7,#eba886)}
   .work-card.blue{background:linear-gradient(160deg,#c5e4ff,#a9d4f4)}
   .work-card.gold{background:linear-gradient(160deg,#f3e2b0,#e7cf86)}
+  .work-card.mint{background:linear-gradient(160deg,#a8ead5,#8fdac0)}
   .card-head{
     position:relative;
     z-index:2;
@@ -1546,8 +1547,8 @@
 <article class="panel white skill-card">
 <p class="kicker">Frameworks &amp; Tools</p>
 <h2>Build tools.</h2>
-<p>Django, Django REST Framework, Angular, Spring Boot, Node.js, RESTful APIs, JWT authentication, Docker, Nginx, AWS, GitHub Actions CI/CD, Gunicorn, WhiteNoise, OpenAPI/Swagger, Git, Postman, and Figma.</p>
-<div class="chips"><span>Django</span><span>Django REST Framework</span><span>Angular</span><span>Spring Boot</span><span>Node.js</span><span>RESTful APIs</span><span>JWT Auth</span><span>Docker</span><span>Nginx</span><span>AWS</span><span>GitHub Actions CI/CD</span><span>Gunicorn</span><span>WhiteNoise</span><span>OpenAPI/Swagger</span><span>Git</span><span>Postman</span><span>Figma</span></div>
+<p>Django, Django REST Framework, Angular, Spring Boot, Node.js, RESTful APIs, JWT authentication, Docker, Nginx, Railway, GitHub Actions CI, Gunicorn, WhiteNoise, OpenAPI/Swagger, Git, Postman, and Figma.</p>
+<div class="chips"><span>Django</span><span>Django REST Framework</span><span>Angular</span><span>Spring Boot</span><span>Node.js</span><span>RESTful APIs</span><span>JWT Auth</span><span>Docker</span><span>Nginx</span><span>Railway</span><span>GitHub Actions CI</span><span>Gunicorn</span><span>WhiteNoise</span><span>OpenAPI/Swagger</span><span>Git</span><span>Postman</span><span>Figma</span></div>
 </article>
 <article class="panel cyan skill-card">
 <p class="kicker">Data &amp; Domain</p>
@@ -1595,6 +1596,29 @@
 <div class="line w80"></div>
 <div class="line w68"></div>
 <div class="button-row"><span class="mock-btn light"></span><span class="mock-btn"></span></div>
+</div>
+</div>
+</a>
+<a class="work-card mint" data-case="nobirds" href="#work">
+<div class="card-head">
+<p class="card-kicker">No Birds Rental Car Company · Apr 2025 – Oct 2025</p>
+<h3>Frontend Developer.</h3>
+<div class="job-meta"><span>Angular + TypeScript</span><span>Responsive UI</span><span>Git</span></div>
+<p>Built and maintained responsive booking and service pages for a car rental company using HTML, CSS, JavaScript, TypeScript, and Angular.</p>
+<ul class="mini-list">
+<li>Reusable Angular components &amp; UI workflows</li>
+<li>Frontend wired to backend &amp; NoSQL data</li>
+<li>Cross-browser, mobile-friendly, Git-based</li>
+</ul>
+</div>
+<div class="mock-code">
+<div class="code-top"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+<div class="code-body">
+<span><span class="code-muted">// booking widget</span></span>
+<span><span class="code-blue">@Component</span>(<span class="code-green">'app-booking'</span>)</span>
+<span><span class="code-blue">export class</span> BookingComponent {</span>
+<span>  <span class="code-green">search</span>(query) { ... }</span>
+<span>}</span>
 </div>
 </div>
 </a>
@@ -1723,13 +1747,13 @@
 <div class="pf-main">
 <p class="kicker">Full-stack · Django + TypeScript + Python</p>
 <h2>This portfolio &amp; Stimulus.</h2>
-<p>A full-stack portfolio website built with Django and Django REST Framework that also acts as the backend for my Stimulus game. It serves this single-page site, exposes a JWT-secured game API, caches a leaderboard in Redis, persists data in PostgreSQL, and powers the Contact chatbot through the Gemini API (the key stays server-side). The whole app is containerised with Docker behind Nginx, documented with OpenAPI/Swagger, and shipped to AWS through a GitHub Actions CI/CD pipeline.</p>
+<p>A full-stack portfolio website built with Django and Django REST Framework that also acts as the backend for my Stimulus game. It serves this single-page site, exposes a JWT-secured game API, caches a leaderboard in Redis, persists data in PostgreSQL, and powers the Contact chatbot through the Gemini API (the key stays server-side). The whole app is containerised with Docker behind Nginx, documented with OpenAPI/Swagger, tested in a GitHub Actions CI pipeline, and hosted on Railway.</p>
 <p>Stimulus is a warm, narrative puzzle game where every puzzle nudges you toward one small act of self-care. It was first built in Python — a downloadable Python version of the game still exists — and then rebuilt as a browser game using a custom TypeScript engine with HTML5 Canvas effects, wired to the Django backend so players can save their coins, progress, and the letters they have read.</p>
 <div class="learning-note"><strong>Learning:</strong> Building the site and game together showed me how one Django backend can power very different frontends — a marketing site, an AI chatbot, and a real-time game — and how auth, caching, containers, and CI/CD fit together to ship something to production.</div>
 </div>
 <div class="pf-side">
 <p class="pf-side-label">Built &amp; engineered with</p>
-<div class="chips"><span>Django 5</span><span>Django REST Framework</span><span>Python</span><span>PostgreSQL</span><span>Redis</span><span>JWT Auth</span><span>Gemini API</span><span>TypeScript</span><span>HTML5</span><span>CSS3</span><span>Canvas</span><span>Docker</span><span>Nginx</span><span>AWS</span><span>GitHub Actions CI/CD</span><span>Gunicorn</span><span>WhiteNoise</span><span>OpenAPI/Swagger</span></div>
+<div class="chips"><span>Django 5</span><span>Django REST Framework</span><span>Python</span><span>PostgreSQL</span><span>Redis</span><span>JWT Auth</span><span>Gemini API</span><span>TypeScript</span><span>HTML5</span><span>CSS3</span><span>Canvas</span><span>Docker</span><span>Nginx</span><span>Railway</span><span>GitHub Actions CI</span><span>Gunicorn</span><span>WhiteNoise</span><span>OpenAPI/Swagger</span></div>
 </div>
 </article>
 </div>
@@ -1795,8 +1819,8 @@
     <span class="gf-chip">HTML5 + CSS3</span>
     <span class="gf-chip">Canvas <small>effects</small></span>
     <span class="gf-chip">Docker</span>
-    <span class="gf-chip">AWS <small>deploy</small></span>
-    <span class="gf-chip">GitHub Actions <small>CI/CD</small></span>
+    <span class="gf-chip">Railway <small>hosting</small></span>
+    <span class="gf-chip">GitHub Actions <small>CI</small></span>
   </div>
 </div>
 </div>
@@ -1829,7 +1853,7 @@
 <article class="panel white">
 <p class="kicker">Shipping</p>
 <h2>Get it to production.</h2>
-<p>Docker, GitHub Actions, and AWS taught me that writing the code is only half the job. I learned to containerise, automate testing and deployment, and actually run software in production instead of leaving it as a local demo.</p>
+<p>Docker, GitHub Actions, and Railway taught me that writing the code is only half the job. I learned to containerise, automate testing and deployment, and actually run software in production instead of leaving it as a local demo.</p>
 </article>
 <article class="panel cyan">
 <p class="kicker">Craft</p>
@@ -1940,6 +1964,23 @@
         "Conduct monthly data-submission checks across client practices to verify accuracy and compliance with operational standards, identifying and resolving data quality issues proactively.",
         "Coordinate with third-party vendors to resolve issues within agreed service levels, and support system installations and client onboarding sessions.",
         "Monitor system performance across Windows Server and client environments, recommending upgrades to reduce recurring issues; contribute to knowledge base articles to improve first-contact resolution rates."
+      ]
+    },
+    nobirds:{
+      kicker:"No Birds Rental Car Company · Apr 2025 – Oct 2025",
+      title:"Frontend Developer.",
+      body:[
+        "No Birds Rental Car Company is an Australian vehicle rental provider. I worked on the customer-facing website people use to browse, book, and manage rental cars.",
+        "The role was frontend-focused: building responsive Angular interfaces in TypeScript and wiring them into the backend services behind the booking experience."
+      ],
+      tags:["HTML","CSS","JavaScript","TypeScript","Angular","Reusable components","NoSQL","AWS","Git","Cross-browser"],
+      details:[
+        "Developed and maintained responsive web interfaces using HTML, CSS, JavaScript, TypeScript, and Angular for customer-facing rental car booking and service pages.",
+        "Built reusable Angular components, improved UI workflows, and integrated frontend features with backend services and NoSQL data structures.",
+        "Supported website performance, usability, and cross-browser compatibility improvements across desktop and mobile devices.",
+        "Worked with AWS-hosted environments to assist with feature deployment, testing, bug fixes, and ongoing frontend enhancements.",
+        "Collaborated with team members to troubleshoot UI issues, resolve defects, and improve the overall customer booking experience.",
+        "Used Git-based workflows to manage code changes, review updates, and support clean, maintainable frontend development."
       ]
     },
     library:{

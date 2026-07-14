@@ -1,19 +1,11 @@
 """
-Game progress models.
+Models for saving game progress.
 
-These mirror the mechanics that exist in the Stimulus game client (index.html):
-
-  * The game has a coin economy: Game.coins starts at 200, award()/spend()
-    adjust it, the shop deducts coins on purchase.
-  * Game.roomItems is the list of shop item keys the player has bought.
-  * Letters are consumed from Game.unused as the player plays them; the set of
-    seen letter ids is the "letters used".
-  * Each puzzle (logic grid / sequence) starts with MAX_LIVES and awards coins
-    on a win.
-
-The backend persists the player-facing state so progress survives across
-sessions: coins, purchased items, and used letters together form the saved
-game progress, plus a per-puzzle history for a leaderboard.
+These follow the mechanics in the Stimulus client: coins start at 200 and go up
+and down through play and the shop, the player collects shop items, and letters
+get "used" as they're read. I persist that state so a signed-in player keeps
+their coins, purchases and read letters between sessions, plus a per-puzzle
+history that feeds the leaderboard.
 """
 
 from django.db import models
@@ -69,11 +61,9 @@ class PuzzleAttempt(models.Model):
 
 class GameProgress(models.Model):
     """
-    Persistent per-player progress snapshot — one row per player.
-
-    This is the single source of truth the Stimulus client loads on login and
-    saves to from the lobby. It holds exactly the three things requested:
-    coins, the items the player has bought, and the letters they have used.
+    One row per player. This is what the client loads on login and writes back
+    from the lobby: coins, the items they've bought, and the letters they've
+    read.
     """
 
     player = models.OneToOneField(

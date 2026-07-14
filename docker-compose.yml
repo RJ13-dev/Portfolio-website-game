@@ -32,8 +32,8 @@ services:
       ALLOWED_HOSTS: "localhost,127.0.0.1,web"
       DATABASE_URL: "postgres://portfolio:portfolio@db:5432/portfolio"
       REDIS_URL: "redis://redis:6379/0"
-      ANTHROPIC_API_KEY: "${ANTHROPIC_API_KEY:-}"
-      CLAUDE_MODEL: "${CLAUDE_MODEL:-claude-haiku-4-5-20251001}"
+      GEMINI_API_KEY: "${GEMINI_API_KEY:-}"
+      GEMINI_MODEL: "${GEMINI_MODEL:-gemini-2.0-flash}"
     depends_on:
       db:
         condition: service_healthy

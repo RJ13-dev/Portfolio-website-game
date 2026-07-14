@@ -10,6 +10,8 @@ Endpoints (all under /api/games/):
   * GET    leaderboard/         -> top players by coins (cached)
 """
 
+import json
+
 from django.core.cache import cache
 from django.utils import timezone
 from rest_framework import generics, permissions, status
@@ -28,8 +30,8 @@ from .serializers import (
 LEADERBOARD_CACHE_KEY = "leaderboard:top"
 LEADERBOARD_CACHE_TTL = 30  # seconds
 
-# Upper bound for a legitimate coin balance. The client is trusted to report
-# its own coins, so clamp to a sane range to limit leaderboard tampering.
+# The client reports its own coins, so clamp to a sane ceiling to make
+# leaderboard tampering harder.
 MAX_COINS = 1_000_000
 
 
@@ -60,14 +62,23 @@ class ProgressView(APIView):
         data = request.data
         if "coins" in data:
             progress.coins = min(max(_safe_int(data["coins"]), 0), MAX_COINS)
+        # Cap both the number of entries and the length of each one so nobody
+        # can stuff huge blobs into these JSON columns.
         if "purchased_items" in data:
-            progress.purchased_items = list(data["purchased_items"])[:200]
+            progress.purchased_items = [
+                str(item)[:100] for item in list(data["purchased_items"])[:200]
+            ]
         if "used_letters" in data:
-            progress.used_letters = list(data["used_letters"])[:500]
+            progress.used_letters = [
+                str(letter)[:100] for letter in list(data["used_letters"])[:500]
+            ]
         if "puzzles_solved" in data:
             progress.puzzles_solved = min(max(_safe_int(data["puzzles_solved"]), 0), MAX_COINS)
         if "settings" in data:
-            progress.settings = data["settings"]
+            # Only accept a small JSON object here, ignore anything oversized.
+            incoming = data["settings"]
+            if isinstance(incoming, dict) and len(json.dumps(incoming)) <= 5000:
+                progress.settings = incoming
         progress.save()
 
         # Keep the player's headline coin total in sync for the leaderboard.

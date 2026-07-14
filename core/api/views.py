@@ -1,12 +1,10 @@
 """
-Gemini chatbot proxy.
+Chatbot proxy for the Contact page.
 
-The portfolio's "Contact" chatbot calls this endpoint instead of holding any
-API key in the browser. The Google Gemini key is read from the environment
-(GEMINI_API_KEY) and never leaves the server.
-
-If no key is configured (or the call fails), the endpoint returns a friendly
-fallback so the site still works in development without a key.
+The frontend posts here so my Gemini key never sits in the browser. I read the
+key from GEMINI_API_KEY and call Google's REST API server-side. If there's no
+key (or the call errors), I just return a friendly fallback so the site still
+works locally.
 """
 
 import json
@@ -18,7 +16,7 @@ from rest_framework import permissions, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-# A short factual brief about Rijul so the bot answers as a resume assistant.
+# Short brief about me so the bot answers like a resume assistant.
 SYSTEM_PROMPT = (
     "You are a helpful assistant embedded in Rijul Sobti's portfolio website. "
     "Answer questions about Rijul concisely and professionally. "
@@ -67,14 +65,14 @@ def _ask_gemini(api_key, model, message):
     return text or None
 
 
-#: Reject anything longer than this before it reaches the (paid) Gemini API.
+# Drop anything longer than this before it reaches the (paid) Gemini API.
 MAX_MESSAGE_LENGTH = 2000
 
 
 class ChatView(APIView):
     permission_classes = [permissions.AllowAny]
-    # Rate-limited via settings DEFAULT_THROTTLE_RATES["chat"] (30/hour/IP) so
-    # nobody can drain the Gemini quota or use the key as a free LLM proxy.
+    # Throttled at 30/hour/IP (see DEFAULT_THROTTLE_RATES["chat"]) so nobody can
+    # burn through the Gemini quota.
     throttle_scope = "chat"
 
     def post(self, request):
@@ -95,7 +93,7 @@ class ChatView(APIView):
         if not api_key:
             reply = FALLBACK_REPLY
             if settings.DEBUG:
-                reply += " [debug: GEMINI_API_KEY is empty — did you restart the server after editing .env?]"
+                reply += " [debug: GEMINI_API_KEY is empty. Did you restart the server after editing .env?]"
             return Response({"reply": reply})
 
         try:

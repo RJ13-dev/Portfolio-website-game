@@ -1,6 +1,4 @@
-# Core
-# 5.0.6 shipped a potential SQLi (CVE-2024-42005) + several ReDoS issues;
-# stay on the latest patched 5.0.x. Run `pip-audit` to confirm the newest.
+# Core (staying on a patched 5.0.x)
 Django>=5.0.11,<5.1
 djangorestframework==3.15.2
 
@@ -8,22 +6,14 @@ djangorestframework==3.15.2
 psycopg2-binary==2.9.9
 dj-database-url==2.1.0
 
-# Auth (JWT for the game API)
+# JWT auth for the game API
 djangorestframework-simplejwt==5.3.1
 
-# (anthropic removed — the chatbot uses Google Gemini via a plain HTTPS call,
-#  so the unused SDK was dropped to shrink the attack surface.)
-
 # Production server + static files
-# gunicorn 22.0.0 had HTTP request smuggling (CVE-2024-6827); 23+ fixes it.
 gunicorn>=23.0.0
 whitenoise==6.7.0
 
-# AWS S3 static/media storage
-django-storages==1.14.3
-boto3==1.34.122
-
-# Redis cache (leaderboard + future Channels)
+# Redis cache (leaderboard)
 django-redis==5.4.0
 redis==5.0.4
 
